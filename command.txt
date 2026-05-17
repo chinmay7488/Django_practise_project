@@ -1,0 +1,1 @@
+conda activate "D:\Subject\Code Practise\Django_Practise\DjangoPractisePro\my_env"

@@ -1,0 +1,68 @@
+{% extends "Text_Analyzer/base.html" %}
+
+{% block content %}
+
+<body class="features-page">
+    <main class="page">
+        <header>
+            <div>
+                <h1>Feature Notes</h1>
+                <p class="intro">This page documents the calculations used by the plain HTML text analyzer.</p>
+            </div>
+            <nav>
+                <a href="{% url 'TAnalyzer:home' %}">Back to Analyzer</a>
+                <a href="{% url 'TAnalyzer:login' %}">Login</a>
+            </nav>
+        </header>
+
+        <section class="grid">
+            <article class="card">
+                <h2>Core Counts</h2>
+                <ul>
+                    <li>Words are matched from letters and numbers.</li>
+                    <li>Characters are counted with spaces and without spaces.</li>
+                    <li>Sentences count every period, exclamation mark, and question mark.</li>
+                    <li>Paragraphs are counted from non-empty text blocks split by new lines.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h2>Advanced Analysis</h2>
+                <ul>
+                    <li>Keyword frequency uses a JavaScript object like a Python dictionary.</li>
+                    <li>Common small stop words are skipped for clearer keyword results.</li>
+                    <li>Reading time is calculated at 225 words per minute.</li>
+                    <li>Case buttons convert all text instantly.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h2>Cleaning Tools</h2>
+                <ul>
+                    <li>Remove extra spaces can collapse repeated whitespace.</li>
+                    <li>Remove punctuation can strip symbols from text.</li>
+                    <li>Find and replace fields are ready for word substitutions.</li>
+                    <li>Save Analysis is prepared for storing text and statistics.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h2>Regex Practice</h2>
+                <ul>
+                    <li>Email detection can use Python's re module.</li>
+                    <li>URL detection can search for web address patterns.</li>
+                    <li>Custom pattern input allows focused text scans.</li>
+                    <li>History pages can show previous pattern results.</li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="formula">
+            <h2>Readability Formula</h2>
+            <p>The analyzer uses a Flesch-style score:</p>
+            <p><code>206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words)</code></p>
+        </section>
+    </main>
+</body>
+
+{% endblock %}

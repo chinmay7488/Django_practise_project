@@ -1,0 +1,371 @@
+{% extends "Text_Analyzer/base.html" %}
+
+
+{% block content %}
+<body class="analyzer-page">
+    <main class="page">
+        <header>
+            <div class="brand">
+                <h1>Text Analyzer</h1>
+                <p>Paste text to measure statistics, clean formatting, find patterns, and prepare analyses that can be saved to your history.</p>
+            </div>
+            <nav>
+                <a href="{% url 'TAnalyzer:home' %}">Home</a>
+                <a href="{% url 'TAnalyzer:feature' %}">Feature Notes</a>
+                <a href="{% url 'TAnalyzer:history' %}">History</a>
+                <a href="{% url 'TAnalyzer:profile' %}">Profile</a>
+                <a href="{% url 'TAnalyzer:login' %}">Login</a>
+                <a href="{% url 'TAnalyzer:logout' %}">Logout</a>
+            </nav>
+        </header>
+
+        <section class="workspace">
+            <div class="panel editor">
+                <form method="POST" action="" autocomplete="off">
+                    {% csrf_token %}
+                    <label for="textInput">Enter your text</label>
+                    <textarea id="textInput" name="textInput" placeholder="Start typing or paste your text here..." autocomplete="off">{% if updated_Text %}{{ updated_Text }}{% else %}{% endif %}</textarea>
+                    <div class="toolbar" aria-label="Text tools">
+                        <button type="submit" name='action' value="analyze" >Analyze Text</button>
+                        <button type="submit" name="action" value="save">Save Analysis</button>
+                        <button type="submit" class="secondary" name='action' value="uppercase">UPPERCASE</button>
+                        <button type="submit" class="secondary" name='action' value="lowercase">lowercase</button>
+                        <button type="submit" class="secondary" name='action' value="TitleCase">Title Case</button>
+                        <button type="submit" class="secondary" id='clearBtn' >Clear</button>
+                    </div>
+
+                    <section class="tool-panel" aria-label="Cleaning and formatting tools">
+                        <div class="tool-heading">
+                            <h2>Cleaning & Formatting</h2>
+                            <p>Controls are prepared for backend logic using Python string methods and regular expressions.</p>
+                        </div>
+
+                        <div class="control-grid">
+                            <label class="check-control" for="removeSpaces">
+                                <input type="checkbox" name="remove_extra_spaces" value="true">
+                                <span>
+                                    <strong>Remove Extra Spaces</strong>
+                                    Replace repeated spaces with a single space.
+                                </span>
+                            </label>
+
+                            <label class="check-control" for="removePunctuation">
+                                <input type="checkbox" name="remove_punctuation" value="true">
+                                <span>
+                                    <strong>Remove Punctuation</strong>
+                                    Keep only letters, numbers, and spaces.
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="replace-row">
+                            <div>
+                                <label for="findText">Find word</label>
+                                <input id="findText" type="text" name="find_text" placeholder="Example: draft" value="{{ find_text }}">
+                            </div>
+                            <div>
+                                <label for="replaceText">Replace with</label>
+                                <input id="replaceText" type="text" name="replace_text" placeholder="Example: final" value="{{ replace_text }}">
+                            </div>
+                            <button type="submit" class="secondary replace-button" name="action" value="find">Find</button>
+                            <button type="submit" class="secondary replace-button" name="action" value="replace">Replace</button>
+                        </div>
+                    </section>
+
+                    <section class="tool-panel regex-panel" aria-label="Regex pattern tools">
+                        <div class="tool-heading">
+                            <h2>Regex Pattern Finder</h2>
+                            <p>Use this area for patterns such as emails, URLs, hashtags, phone numbers, or custom expressions.</p>
+                        </div>
+
+                        <div class="replace-row">
+                            <div class="wide-field">
+                                <label for="regexPattern">Pattern</label>
+                                <input id="regexPattern" type="text" name="regex_pattern" placeholder="Example: [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+" value="{{ regex_pattern }}">
+                            </div>
+                            <button type="submit" class="secondary replace-button" name="action" value="find_pattern">Find Pattern</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+
+            <aside class="results">
+                <div class="panel stats">
+                    <div class="stat">
+                        <span>Words</span>
+                        <strong id="wordCount">{{word}}</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Sentences</span>
+                        <strong id="sentenceCount">{{sentences}}</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Characters</span>
+                        <strong id="charCount">{{ character }}</strong>
+                    </div>
+                    <div class="stat">
+                        <span>No Spaces</span>
+                        <strong id="charNoSpaceCount">0</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Paragraphs</span>
+                        <strong id="paragraphCount">{{paragraphs}}</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Reading Time</span>
+                        <strong id="readingTime">{{reading_Time}} min</strong>
+                    </div>
+                    <div class="stat score wide">
+                        <span>Readability Score</span>
+                        <strong id="readabilityScore">{{readability_text}}</strong>
+                        <p class="readability-note" id="readabilityLabel">Add text to calculate a Flesch-style score.</p>
+                    </div>
+                </div>
+
+                <div class="panel section">
+                    <h2>Keyword Frequency</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Keyword</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
+                        <tbody id="keywordBody">
+                        {% if keyword_items %}
+                            {% for key, value in keyword_items %}
+                                <tr>
+                                    <td>{{key}}</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td class="empty" colspan="2">No keywords yet.</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if find_text %}
+                <div class="panel section">
+                    <h2>Find Results</h2>
+                    <p>{{ find_count }} match{{ find_count|pluralize:"es" }} found for "{{ find_text }}".</p>
+                    {% if find_matches %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Match</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for match in find_matches %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ match }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if regex_pattern %}
+                <div class="panel section">
+                    <h2>Pattern Results</h2>
+                    {% if regex_error %}
+                        <p>{{ regex_error }}</p>
+                    {% else %}
+                        <p>{{ regex_count }} match{{ regex_count|pluralize:"es" }} found for "{{ regex_pattern }}".</p>
+                        {% if regex_matches %}
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Match</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for match in regex_matches %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ match }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="panel section history-preview">
+                    <div class="section-head">
+                        <h2>Analysis History</h2>
+                        <a href="{% url 'TAnalyzer:history' %}">View all</a>
+                    </div>
+                    <article class="history-item">
+                        <strong>Product description cleanup</strong>
+                        <span>May 14, 2026 at 10:30 AM</span>
+                        <p>438 words, 2 min read, 74 readability score.</p>
+                    </article>
+                    <article class="history-item">
+                        <strong>Email pattern scan</strong>
+                        <span>May 13, 2026 at 4:15 PM</span>
+                        <p>12 emails found across 918 characters.</p>
+                    </article>
+                </div>
+            </aside>
+        </section>
+
+        <footer>Average reading speed uses 225 words per minute.</footer>
+    </main>
+
+
+    {% block script%}
+    <script>
+        document.getElementById("clearBtn").addEventListener("click", () => {
+                    textInput.value = "";
+                    textInput.focus();
+                });
+    </script>
+      {% endblock %}
+
+
+    <!-- <script>
+        const textInput = document.getElementById("textInput");
+        const keywordBody = document.getElementById("keywordBody");
+
+        const stopWords = new Set([
+            "a", "an", "and", "are", "as", "at", "be", "but", "by", "for",
+            "from", "has", "he", "in", "is", "it", "its", "of", "on", "or",
+            "that", "the", "to", "was", "were", "will", "with", "you", "your"
+        ]);
+
+        function getWords(text) {
+            return text.toLowerCase().match(/[a-z0-9]+(?:'[a-z0-9]+)?/g) || [];
+        }
+
+        function countSyllables(word) {
+            const cleanWord = word.toLowerCase().replace(/[^a-z]/g, "");
+
+            if (!cleanWord) {
+                return 0;
+            }
+
+            const withoutSilentEnding = cleanWord.replace(/e$/, "");
+            const matches = withoutSilentEnding.match(/[aeiouy]+/g);
+            return Math.max(1, matches ? matches.length : 1);
+        }
+
+        function getParagraphCount(text) {
+            return text.trim().split(/\n+/).filter(paragraph => paragraph.trim().length > 0).length;
+        }
+
+        function getReadabilityLabel(score) {
+            if (score >= 90) {
+                return "Very easy to read.";
+            }
+
+            if (score >= 70) {
+                return "Easy to read.";
+            }
+
+            if (score >= 50) {
+                return "Fairly readable.";
+            }
+
+            if (score >= 30) {
+                return "Difficult to read.";
+            }
+
+            return "Very difficult to read.";
+        }
+
+        function updateKeywordTable(words) {
+            const frequency = {};
+
+            words.forEach(word => {
+                if (word.length > 2 && !stopWords.has(word)) {
+                    frequency[word] = (frequency[word] || 0) + 1;
+                }
+            });
+
+            const sortedWords = Object.entries(frequency)
+                .sort((first, second) => second[1] - first[1] || first[0].localeCompare(second[0]))
+                .slice(0, 10);
+
+            if (sortedWords.length === 0) {
+                keywordBody.innerHTML = '<tr><td class="empty" colspan="2">No keywords yet.</td></tr>';
+                return;
+            }
+
+            keywordBody.innerHTML = sortedWords
+                .map(([word, count]) => `<tr><td>${word}</td><td>${count}</td></tr>`)
+                .join("");
+        }
+
+        function analyzeText() {
+            const text = textInput.value;
+            const words = getWords(text);
+            const wordCount = words.length;
+            const sentenceMatches = text.match(/[.!?]/g) || [];
+            const sentenceCount = sentenceMatches.length;
+            const paragraphCount = getParagraphCount(text);
+            const charactersWithoutSpaces = text.replace(/\s/g, "").length;
+            const syllables = words.reduce((total, word) => total + countSyllables(word), 0);
+            const readingMinutes = wordCount / 225;
+
+            const safeSentenceCount = Math.max(sentenceCount, 1);
+            const safeWordCount = Math.max(wordCount, 1);
+            const readability = wordCount === 0
+                ? 0
+                : 206.835 - (1.015 * (wordCount / safeSentenceCount)) - (84.6 * (syllables / safeWordCount));
+
+            document.getElementById("wordCount").textContent = wordCount;
+            document.getElementById("sentenceCount").textContent = sentenceCount;
+            document.getElementById("charCount").textContent = text.length;
+            document.getElementById("charNoSpaceCount").textContent = charactersWithoutSpaces;
+            document.getElementById("paragraphCount").textContent = paragraphCount;
+            document.getElementById("readingTime").textContent = wordCount === 0
+                ? "0 min"
+                : `${Math.max(1, Math.ceil(readingMinutes))} min`;
+            document.getElementById("readabilityScore").textContent = Math.round(readability);
+            document.getElementById("readabilityLabel").textContent = wordCount === 0
+                ? "Add text to calculate a Flesch-style score."
+                : getReadabilityLabel(readability);
+
+            updateKeywordTable(words);
+        }
+
+        function toTitleCase(text) {
+            return text.toLowerCase().replace(/\b\w/g, letter => letter.toUpperCase());
+        }
+
+        document.getElementById("analyzeBtn").addEventListener("click", analyzeText);
+        document.getElementById("upperBtn").addEventListener("click", () => {
+            textInput.value = textInput.value.toUpperCase();
+            analyzeText();
+        });
+        document.getElementById("lowerBtn").addEventListener("click", () => {
+            textInput.value = textInput.value.toLowerCase();
+            analyzeText();
+        });
+        document.getElementById("titleBtn").addEventListener("click", () => {
+            textInput.value = toTitleCase(textInput.value);
+            analyzeText();
+        });
+        document.getElementById("clearBtn").addEventListener("click", () => {
+            textInput.value = "";
+            analyzeText();
+            textInput.focus();
+        });
+        textInput.addEventListener("input", analyzeText);
+
+        analyzeText();
+    </script> -->
+</body>
+{% endblock %}

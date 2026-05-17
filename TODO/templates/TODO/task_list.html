@@ -1,0 +1,87 @@
+{% extends "TODO/base.html" %}
+
+{% block title %}Todo Tasks{% endblock %}
+{% block page_heading %}Todo Dashboard{% endblock %}
+
+{% block content %}
+<section class="task-panel">
+    <div class="panel-header">
+        <div>
+            <h2>Tasks</h2>
+            <p>Track pending work, priorities, and deadlines in one place.</p>
+        </div>
+        <div class="summary-row" aria-label="Task summary">
+            <span><strong>{{ pending_count|default:"0" }}</strong> Pending</span>
+            <span><strong>{{ completed_count|default:"0" }}</strong> Complete</span>
+        </div>
+    </div>
+
+    <div class="task-list">
+        {% for task in tasks %}
+        <article class="task-card priority-{{ task.Priority|default:'medium'|lower }}">
+            <form class="status-form" method="post" action="">
+                {% csrf_token %}
+                <label class="status-toggle">
+                    <input type="checkbox" 
+                        class="status-checkbox" 
+                        name="is_complete" 
+                        data-id="{{ task.id }}" 
+                        {% if task.Is_Completed %}checked{% endif %}>
+                    <span></span>
+                        <strong class="status-text">{% if task.Is_Completed %}Complete{% else %}Pending{% endif %}</strong>
+                    </label>
+            </form>
+
+            <div class="task-main">
+                <h3 class="{% if task.Is_Completed %}complete-text{% endif %}">
+                    {{ task.Title|default:"Sample task title" }}
+                </h3>
+                <div class="task-meta">
+                    <span class="badge">{{ task.Priority|default:"Medium" }}</span>
+                    <span>Due: {{ task.Due_Date|date:"M d, Y"|default:"No deadline" }}</span>
+                </div>
+            </div>
+
+            <div class="task-actions">
+                <a class="button secondary" href="{% url 'TODO:Edit_Task' task.id %}">Edit</a>
+                <a class="button danger" href="{% url 'TODO:Delete_Task' task.id %}">Delete</a>
+            </div>
+        </article>
+        {% empty %}
+        <div class="empty-state">
+            <h2>No tasks yet</h2>
+            <p>Create your first task with a priority and deadline.</p>
+            <a class="button primary" href="{% url 'TODO:Create_Task' %}">Add Task</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    document.querySelectorAll('.status-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const taskId = this.getAttribute('data-id');
+            const isCompleted = this.checked;
+            const statusText = this.parentElement.querySelector('.status-text');
+
+            // Send data to Django
+            fetch(`/TODO/toggle/${taskId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}', // Required for security
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'is_completed': isCompleted })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Update the label text dynamically
+                    statusText.innerText = isCompleted ? 'Complete' : 'Pending';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

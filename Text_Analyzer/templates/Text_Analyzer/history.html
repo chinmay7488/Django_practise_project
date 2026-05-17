@@ -1,0 +1,92 @@
+{% extends "Text_Analyzer/base.html" %}
+
+{% block content %}
+<body class="history-page">
+    <main class="page">
+        <header>
+            <div>
+                <h1>Analysis History</h1>
+                <p class="intro">Saved text analyses appear here with timestamps, summary statistics, and quick actions.</p>
+            </div>
+            <nav>
+                <a href="{% url 'TAnalyzer:home' %}">Analyzer</a>
+                <a href="{% url 'TAnalyzer:profile' %}">profile</a>
+                <a href="logout.html">Logout</a>
+            </nav>
+        </header>
+
+        <section class="history-layout">
+            <aside class="panel history-filter">
+                <h2>Filters</h2>
+                <label for="historySearch">Search saved text</label>
+                <input id="historySearch" type="search" placeholder="Search title or content">
+
+                <label for="patternType">Pattern type</label>
+                <select id="patternType">
+                    <option>All analyses</option>
+                    <option>Email scans</option>
+                    <option>URL scans</option>
+                    <option>Find and replace</option>
+                    <option>Cleaned formatting</option>
+                </select>
+
+                <button type="button">Apply Filters</button>
+            </aside>
+
+            <section class="history-list">
+                <article class="panel history-card">
+                    <div>
+                        <h2>Product description cleanup</h2>
+                        <span>May 14, 2026 at 10:30 AM</span>
+                    </div>
+                    <p>Extra spaces removed, punctuation preserved, keyword frequency generated.</p>
+                    <dl class="metric-row">
+                        <div>
+                            <dt>Words</dt>
+                            <dd>438</dd>
+                        </div>
+                        <div>
+                            <dt>Characters</dt>
+                            <dd>2,814</dd>
+                        </div>
+                        <div>
+                            <dt>Readability</dt>
+                            <dd>74</dd>
+                        </div>
+                    </dl>
+                    <div class="card-actions">
+                        <button type="button" class="secondary">Open</button>
+                        <button type="button" class="danger">Delete</button>
+                    </div>
+                </article>
+
+                <article class="panel history-card">
+                    <div>
+                        <h2>Email pattern scan</h2>
+                        <span>May 13, 2026 at 4:15 PM</span>
+                    </div>
+                    <p>Regex scan prepared for finding email addresses and contact patterns.</p>
+                    <dl class="metric-row">
+                        <div>
+                            <dt>Matches</dt>
+                            <dd>12</dd>
+                        </div>
+                        <div>
+                            <dt>Words</dt>
+                            <dd>126</dd>
+                        </div>
+                        <div>
+                            <dt>Reading Time</dt>
+                            <dd>1 min</dd>
+                        </div>
+                    </dl>
+                    <div class="card-actions">
+                        <button type="button" class="secondary">Open</button>
+                        <button type="button" class="danger">Delete</button>
+                    </div>
+                </article>
+            </section>
+        </section>
+    </main>
+</body>
+{% endblock %}

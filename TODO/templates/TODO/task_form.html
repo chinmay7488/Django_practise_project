@@ -1,0 +1,46 @@
+{% extends "TODO/base.html" %}
+
+{% block title %}
+{% if task %} Edit Task {% else %} Create Task{% endif %}
+{% endblock %}
+{% block page_heading %}{% if task %}Edit Task{% else %}Create Task{% endif %}{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+    <form class="task-form" method="post">
+        {% csrf_token %}
+        <label class="field">
+            <span>Task text</span>
+            <textarea name="task_text" rows="4" placeholder="What needs to be done?"
+                required>{{ task.Title|default:"" }}</textarea>
+        </label>
+
+        <div class="form-grid">
+            <label class="field">
+                <span>Priority</span>
+                <select name="priority" required>
+                    <option value="Low" {% if task.Priority == "Low" %}selected{% endif %}>Low</option>
+                    <option value="Medium" {% if task.Priority == "Medium" or not task %}selected{% endif %}>Medium
+                    </option>
+                    <option value="High" {% if task.Priority == "High" %}selected{% endif %}>High</option>
+                </select>
+            </label>
+
+            <label class="field">
+                <span>Due date</span>
+                <input type="date" name="due_date" value="{{ task.Due_Date|date:'Y-m-d' }}">
+            </label>
+        </div>
+
+        <label class="complete-check">
+            <input type="checkbox" name="is_complete" {% if task.Is_Completed %}checked{% endif %}>
+            <span>Mark task as complete</span>
+        </label>
+
+        <div class="form-actions">
+            <a class="button secondary" href="{% url 'TODO:home' %}">Cancel</a>
+            <button class="button primary" type="submit">{% if task %}Update Task{% else %}Create Task {%endif%}</button>
+        </div>
+    </form>
+</section>
+{% endblock content %}

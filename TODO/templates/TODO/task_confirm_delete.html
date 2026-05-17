@@ -1,0 +1,24 @@
+{% extends "TODO/base.html" %}
+
+{% block title %}Delete Task{% endblock %}
+{% block page_heading %}Delete Task{% endblock %}
+
+{% block content %}
+<section class="delete-panel">
+    <div class="delete-card">
+        <p class="eyebrow danger-text">Confirm delete</p>
+        <h2>Delete this task?</h2>
+        <p class="delete-copy">
+            This action will remove
+            <strong>{{ task.text|default:"this task" }}</strong>
+            from your todo list.
+        </p>
+
+        <form class="form-actions" method="post" action="">
+            {% csrf_token %}
+            <a class="button secondary" href="{% url 'TODO:home' %}">Cancel</a>
+            <button class="button danger" type="submit">Delete Task</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
