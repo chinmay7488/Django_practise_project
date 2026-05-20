@@ -13,5 +13,6 @@ class AnalyzeSave(models.Model):
     character_count =  models.IntegerField()
     paragraph_count =  models.IntegerField()
     readablity_score = models.IntegerField()
+    reading_time = models.FloatField()
     Saving_date_time = models.DateTimeField(auto_now_add=True)
 

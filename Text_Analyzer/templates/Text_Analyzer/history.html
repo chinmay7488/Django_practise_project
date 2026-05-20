@@ -58,7 +58,7 @@
                         </dl>
                         <div class="card-actions">
                             <button type="button" class="secondary">Open</button>
-                            <button type="button" class="danger">Delete</button>
+                            <button type="button" onclick="window.location.href='{% url 'TAnalyzer:delete_analyze' hist.id %}'" class="danger">Delete</button>
                         </div>
                     </article>
                 {% endfor %}

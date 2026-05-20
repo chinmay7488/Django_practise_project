@@ -8,6 +8,10 @@ from .models import AnalyzeSave
 
 # Create your views here.
 def home(request):
+    # if request.user.is_authenticated:
+    #     global data
+    #     data = AnalyzeSave.objects.filter(Person = request.user)
+
     if request.method == "POST":
         global characters
         global  para_len 
@@ -226,14 +230,22 @@ def Save_Analyze(request):
         
         AnalyzeSave.objects.create(
             Person = request.user,
-            Title = 'Title',
+            Title = original_text[:50],
             words_count = word_count,
             orginal_text = original_text,
             updated_text = updated_text,
             sentence_count = sentences,
             character_count = characters,
             paragraph_count = para_len,
-            readablity_score = score
+            readablity_score = score,
+            reading_time = reading_time
         )
 
         return redirect('TAnalyzer:home')
+    
+def delete_analyze(request, analyzeid):
+    print(analyzeid)
+    if request.user.is_authenticated:
+        row = AnalyzeSave.objects.filter(id = analyzeid)
+        row.delete()
+    return redirect('TAnalyzer:history')

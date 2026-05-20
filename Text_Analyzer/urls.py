@@ -14,5 +14,6 @@ urlpatterns = [
     path("logout/", views.logout_page, name='logout'),
     path("delete/", views.delete, name='delete'),
     path("save/", views.Save_Analyze, name='save_analyze'),
+    path("delete_analyze/<int:analyzeid>/", views.delete_analyze, name='delete_analyze'),
 
 ]

@@ -209,16 +209,17 @@
                         <h2>Analysis History</h2>
                         <a href="{% url 'TAnalyzer:history' %}">View all</a>
                     </div>
-                    <article class="history-item">
-                        <strong>Product description cleanup</strong>
-                        <span>May 14, 2026 at 10:30 AM</span>
-                        <p>438 words, 2 min read, 74 readability score.</p>
-                    </article>
-                    <article class="history-item">
-                        <strong>Email pattern scan</strong>
-                        <span>May 13, 2026 at 4:15 PM</span>
-                        <p>12 emails found across 918 characters.</p>
-                    </article>
+                    {% if User_history %}
+                        {% for hist in User_history %}
+                        <article class="history-item">
+                            <strong>{{ hist.Title }}</strong>
+                            <span>{{ hist.Saving_date_time }}</span>
+                            <p>{{ hist.words_count}} words, {{ hist.reading_score }} min read, {{ hist.readablity_score}} readability score.</p>
+                        </article>
+                    {%endfor%}
+                    {% else %}
+                        <h3> No records aviable</h3>
+                    {% endif %}
                 </div>
             </aside>
         </section>
