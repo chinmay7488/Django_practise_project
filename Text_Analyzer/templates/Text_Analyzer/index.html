@@ -13,9 +13,11 @@
                 <a href="{% url 'TAnalyzer:home' %}">Home</a>
                 <a href="{% url 'TAnalyzer:feature' %}">Feature Notes</a>
                 <a href="{% url 'TAnalyzer:history' %}">History</a>
-                <a href="{% url 'TAnalyzer:profile' %}">Profile</a>
-                <a href="{% url 'TAnalyzer:login' %}">Login</a>
-                <a href="{% url 'TAnalyzer:logout' %}">Logout</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'TAnalyzer:profile' %}">Profile</a>
+                {% else %}
+                    <a href="{% url 'TAnalyzer:login' %}">Login</a>
+                {% endif %}
             </nav>
         </header>
 
@@ -27,7 +29,7 @@
                     <textarea id="textInput" name="textInput" placeholder="Start typing or paste your text here..." autocomplete="off">{% if updated_Text %}{{ updated_Text }}{% else %}{% endif %}</textarea>
                     <div class="toolbar" aria-label="Text tools">
                         <button type="submit" name='action' value="analyze" >Analyze Text</button>
-                        <button type="submit" name="action" value="save">Save Analysis</button>
+                        <button type="submit" name="action" formaction="{% url 'TAnalyzer:save_analyze' %}">Save Analysis</button>
                         <button type="submit" class="secondary" name='action' value="uppercase">UPPERCASE</button>
                         <button type="submit" class="secondary" name='action' value="lowercase">lowercase</button>
                         <button type="submit" class="secondary" name='action' value="TitleCase">Title Case</button>

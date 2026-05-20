@@ -8,11 +8,14 @@
             <div class="auth-copy">
                 <a class="home-link" href="{% url 'TAnalyzer:home' %}">Back to Analyzer</a>
                 <a class="home-link" href="{% url 'TAnalyzer:login' %}">Login</a>
+                <a class="home-link" href="{% url 'TAnalyzer:signup' %}">Sign Up</a>
                 <h1>Logout</h1>
                 <p>End your current session and return to the public analyzer page.</p>
             </div>
 
             <form class="auth-form" action="#" method="post">
+                {% csrf_token %}
+
                 <div class="confirm-box">
                     <strong>Are you sure you want to logout?</strong>
                     <p>Your saved analyses will stay in your account.</p>

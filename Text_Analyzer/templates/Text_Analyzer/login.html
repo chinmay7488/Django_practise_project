@@ -13,6 +13,7 @@
             </div>
 
             <form class="auth-form" action="#" method="post">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input id="username" name="username" type="text" placeholder="Enter your username" autocomplete="username" required>
@@ -22,6 +23,11 @@
                     <label for="password">Password</label>
                     <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
                 </div>
+                {% if error_messages %}
+                <div class="message-box">
+                    {{ error_messages }}
+                </div>
+                {% endif %}
 
                 <div class="auth-row">
                     <label class="remember-control" for="remember">
@@ -32,6 +38,10 @@
                 </div>
 
                 <button class="auth-submit" type="submit">Login</button>
+
+                <p class="auth-note">
+                    Don't have an account? <a href="{% url 'TAnalyzer:signup' %}">Sign Up</a>
+                </p>
             </form>
         </section>
     </main>

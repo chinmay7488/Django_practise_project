@@ -18,10 +18,9 @@
         <section class="profile-layout">
             <aside class="panel profile-card">
                 <div class="avatar" aria-hidden="true">U</div>
-                <h2>Username</h2>
+                <h2>{{ current_user.username }}</h2>
                 <p>Member since May 2026</p>
                 <div class="profile-actions">
-                    <button type="button">Edit Profile</button>
                     <a class="button-link danger-link" href="{% url 'TAnalyzer:delete' %}">Delete User</a>
                 </div>
             </aside>
@@ -30,11 +29,11 @@
                 <div class="panel stats profile-stats">
                     <div class="stat">
                         <span>Saved Analyses</span>
-                        <strong>24</strong>
+                        <strong>{{ Saved_Analyzes }}</strong>
                     </div>
                     <div class="stat">
                         <span>Total Words</span>
-                        <strong>18K</strong>
+                        <strong>{{ Total_words }}</strong>
                     </div>
                     <div class="stat">
                         <span>Regex Scans</span>
@@ -51,16 +50,17 @@
                         <h2>Recent Documents</h2>
                         <a href="{% url 'TAnalyzer:history' %}">View history</a>
                     </div>
-                    <article class="history-item">
-                        <strong>Blog draft polish</strong>
-                        <span>May 14, 2026</span>
-                        <p>Find and replace used for terminology cleanup.</p>
-                    </article>
-                    <article class="history-item">
-                        <strong>URL extraction test</strong>
-                        <span>May 12, 2026</span>
-                        <p>Regex pattern finder prepared for web links.</p>
-                    </article>
+                    {% if User_history %}
+                        {% for hist in User_history %}
+                        <article class="history-item">
+                            <strong>{{ hist.Title }}</strong>
+                            <span>{{ hist.Saving_date_time }}</span>
+                            <p>{{ hist.orginal_text|truncatechars:200 }}</p>
+                        </article>
+                        {% endfor %}
+                    {% else %}
+                        <h3> No records aviable</h3>
+                    {% endif %}
                 </div>
             </section>
         </section>

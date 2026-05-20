@@ -9,7 +9,10 @@ urlpatterns = [
     path("feature/", views.feature, name='feature'),
     path("history/", views.History, name='history'),
     path("profile/", views.Profile, name='profile'),
-    path("login/", views.Profile, name='login'),
-    path("logout/", views.Profile, name='logout'),
-    path("delete/", views.Profile, name='delete'),
+    path("login/", views.login_page, name='login'),
+    path("signup/", views.signup, name='signup'),
+    path("logout/", views.logout_page, name='logout'),
+    path("delete/", views.delete, name='delete'),
+    path("save/", views.Save_Analyze, name='save_analyze'),
+
 ]

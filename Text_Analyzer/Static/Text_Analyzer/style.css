@@ -723,6 +723,15 @@ code {
     margin-bottom: 8px;
 }
 
+.message-box {
+    padding: 12px 14px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #991b1b;
+    background: #fff1f2;
+    font-weight: 700;
+}
+
 .auth-row,
 .auth-actions {
     display: flex;
@@ -759,6 +768,11 @@ code {
 
 .auth-submit {
     width: 100%;
+}
+
+.auth-note {
+    margin: 0;
+    text-align: center;
 }
 
 .button-link {
