@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>External Projects</title>
+    <link rel="stylesheet" href="{% static 'css/projects.css' %}">
+</head>
+<body>
+    <main class="projects-page">
+        <section class="projects-header">
+            <p class="eyebrow">My Django Practice Work</p>
+            <h1>External Projects</h1>
+            <p class="intro">A level-wise list of projects I have created and the ones I am currently working on.</p>
+        </section>
+
+        <section class="projects-grid" aria-label="External project list">
+            {% for group in project_groups %}
+                <article class="project-level">
+                    <h2>{{ group.level }}</h2>
+                    <ol class="project-list">
+                        {% for project in group.projects %}
+                            <li>
+                                <span class="project-name">{{ project.name }}</span>
+                                <span class="status status-{{ project.status|slugify }}">{{ project.status }}</span>
+                                {% if project.url %}
+                                    <a class="project-button" href="{{ project.url }}">View Project</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </article>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>

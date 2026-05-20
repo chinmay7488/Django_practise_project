@@ -17,9 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from . import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", views.projects, name="projects"),
     path('TODO/', include('TODO.urls')),
-    path('Text_Analyzer/', include('Text_Analyzer.urls'))
+    path('Text_Analyzer/', include('Text_Analyzer.urls')),
+    path('Recipe_Meal_Planner/', include('Recipe_Meal_Planner.urls')),
 ]

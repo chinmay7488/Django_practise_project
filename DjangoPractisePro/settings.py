@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'TODO',
-    'Text_Analyzer'
+    'Text_Analyzer',
+    "Recipe_Meal_Planner"
 ]
 
 MIDDLEWARE = [
