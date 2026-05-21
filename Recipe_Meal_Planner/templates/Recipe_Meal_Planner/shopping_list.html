@@ -1,0 +1,36 @@
+{% extends "Recipe_Meal_Planner/base.html" %}  
+{% block Title %}Shopping List{% endblock %}
+{% block content %}
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Planner</a><a class="active" href="{% url 'Recipe_Meal_Planner:shopping_list' %}">Shopping List</a><a href="{% url 'Recipe_Meal_Planner:export' %}">Export</a></nav>
+    </header>
+    <main class="page">
+        <section class="two-column">
+            <div class="panel">
+                <p class="eyebrow">Generated groceries</p>
+                <h1>Shopping List</h1>
+                <ul class="check-list">
+                    <li><span>Whole wheat pasta</span><strong>540 g</strong></li>
+                    <li><span>Chickpeas</span><strong>3 cups</strong></li>
+                    <li><span>Paneer</span><strong>400 g</strong></li>
+                    <li><span>Fresh berries</span><strong>500 g</strong></li>
+                    <li><span>Spinach</span><strong>2 bunches</strong></li>
+                </ul>
+                <a class="button primary" href="{% url 'Recipe_Meal_Planner:export' %}">Export List</a>
+            </div>
+            <div class="panel">
+                <h2>Meal Sources</h2>
+                <table class="table">
+                    <tr><th>Recipe</th><th>Day</th><th>Items</th></tr>
+                    <tr><td>Herbed Lemon Pasta</td><td>Monday</td><td>5</td></tr>
+                    <tr><td>Paneer Grain Bowl</td><td>Tuesday</td><td>7</td></tr>
+                    <tr><td>Berry Protein Oats</td><td>Wednesday</td><td>4</td></tr>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+{% endblock %}

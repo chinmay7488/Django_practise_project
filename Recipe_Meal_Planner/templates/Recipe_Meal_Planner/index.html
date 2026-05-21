@@ -1,14 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Meal Planner</title>
-</head>
+{% extends "Recipe_Meal_Planner/base.html" %} 
+{% block Title %}Recipe Meal Planner{% endblock %}
+{% block content %}
 <body>
-    <main>
-        <h1>Recipe Meal Planner</h1>
-        <p>This project page is ready to connect with the Recipe Meal Planner features.</p>
-    </main>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+            <nav class="nav">
+                <a class="active" href="{% url 'Recipe_Meal_Planner:home' %}">Dashboard</a>
+                <a href="{% url 'Recipe_Meal_Planner:recipes' %}">Recipes</a>
+                <a href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Planner</a>
+                <a href="{% url 'Recipe_Meal_Planner:shopping_list' %}">Shopping List</a>
+                <a href="{% url 'Recipe_Meal_Planner:pantry' %}">Pantry</a>
+                <a href="{% url 'Recipe_Meal_Planner:login' %}">Login</a>
+            </nav>
+        </header>
+        <main class="page">
+            <section class="hero">
+                <div class="hero-panel">
+                    <p class="eyebrow">Weekly kitchen board</p>
+                    <h1>Plan meals, track ingredients, and keep the week calm.</h1>
+                    <p>Dark pastel workspace for recipes, nutrition, pantry matches, and grocery prep.</p>
+                    <div class="hero-actions">
+                        <a class="button primary" href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Open Planner</a>
+                        <a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Add Recipe</a>
+                    </div>
+                </div>
+                <aside class="panel">
+                    <h2>This Week</h2>
+                    <div class="stats-grid compact mt-sm">
+                        <div class="stat"><strong>7</strong><span>planned dinners</span></div>
+                        <div class="stat"><strong>18</strong><span>pantry items</span></div>
+                        <div class="stat"><strong>42</strong><span>shopping items</span></div>
+                        <div class="stat"><strong>2k</strong><span>daily calories</span></div>
+                    </div>
+                </aside>
+            </section>
+            <section class="stats-grid section">
+                <div class="stat"><strong>24</strong><span>recipes saved</span></div>
+                <div class="stat"><strong>8</strong><span>vegetarian meals</span></div>
+                <div class="stat"><strong>11</strong><span>under 30 minutes</span></div>
+                <div class="stat"><strong>6</strong><span>matched from pantry</span></div>
+            </section>
+            <section class="three-column">
+                <article class="list-card">
+                    <h3>Fast Dinner</h3>
+                    <p>Roasted veggie couscous</p>
+                    <div class="tag-row"><span class="tag mint">25 min</span><span class="tag">Dinner</span></div>
+                </article>
+                <article class="list-card">
+                    <h3>Macro Target</h3>
+                    <p>1,980 calories planned</p>
+                    <div class="progress"><span class="w-82"></span></div>
+                </article>
+                <article class="list-card">
+                    <h3>Next Export</h3>
+                    <p>Weekly grocery list</p>
+                    <a class="button" href="{% url 'Recipe_Meal_Planner:export' %}">Preview</a>
+                </article>
+            </section>
+        </main>
+    </div>
 </body>
-</html>
+{% endblock %}

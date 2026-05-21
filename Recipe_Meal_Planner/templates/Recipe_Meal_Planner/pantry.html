@@ -1,0 +1,42 @@
+{% extends "Recipe_Meal_Planner/base.html" %}  
+{% block Title %}Pantry Matcher{% endblock %}
+{% block content %}
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'Recipe_Meal_Planner:home' %}">Dashboard</a><a href="{% url 'Recipe_Meal_Planner:recipes' %}">Recipes</a><a class="active" href="{% url 'Recipe_Meal_Planner:pantry' %}">Pantry</a></nav>
+    </header>
+    <main class="page">
+        <section class="two-column">
+            <form class="panel">
+                <p class="eyebrow">Fridge and pantry</p>
+                <h1>Pantry Matcher</h1>
+                <div class="form-grid mt-lg">
+                    <label>Ingredient<input type="text" placeholder="Chickpeas"></label>
+                    <label>Quantity<input type="text" placeholder="2 cups"></label>
+                    <div class="form-actions full"><button class="primary" type="button">Add Ingredient</button><button type="button">Find Recipes</button></div>
+                </div>
+                <ul class="check-list">
+                    <li><span>Chickpeas</span><strong>2 cups</strong></li>
+                    <li><span>Spinach</span><strong>1 bunch</strong></li>
+                    <li><span>Lemon</span><strong>3 pieces</strong></li>
+                </ul>
+            </form>
+            <div class="panel">
+                <h2>Matched Recipes</h2>
+                <div class="recipe-card flat-card mt-sm">
+                    <div class="tag-row"><span class="tag mint">86% match</span><span class="tag">Dinner</span></div>
+                    <h3>Herbed Lemon Pasta</h3>
+                    <p>Missing: whole wheat pasta.</p>
+                </div>
+                <div class="recipe-card flat-card mt-sm">
+                    <div class="tag-row"><span class="tag mint">82% match</span><span class="tag">Lunch</span></div>
+                    <h3>Chickpea Spinach Toast</h3>
+                    <p>Missing: sourdough.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+{% endblock %}
