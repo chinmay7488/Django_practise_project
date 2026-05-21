@@ -24,11 +24,20 @@
                 <label>Fats<input type="number" placeholder="14"></label>
                 <div class="full panel flat-card">
                     <h2>Ingredients</h2>
-                    <div class="form-grid mt-sm">
-                        <label>Ingredient<select><option>Pasta</option><option>Chickpeas</option><option>Lemon</option></select></label>
-                        <label>Quantity<input type="text" placeholder="180"></label>
-                        <label>Unit<select><option>g</option><option>cup</option><option>piece</option></select></label>
-                        <label>Calories<input type="number" placeholder="280"></label>
+                    <div id="ingredient-list" class="ingredient-list mt-sm">
+                        <div class="ingredient-row form-grid">
+                            <label>Ingredient<select name="ingredient[]"><option>Pasta</option><option>Chickpeas</option><option>Lemon</option></select></label>
+                            <label>New Ingredient<input name="new_ingredient[]" type="text" placeholder="Type if not in list"></label>
+                            <label>Quantity<input name="quantity[]" type="text" placeholder="180"></label>
+                            <label>Unit<select name="unit[]"><option>g</option><option>cup</option><option>piece</option></select></label>
+                            <label>Calories<input name="calories[]" type="number" placeholder="280"></label>
+                            <div class="form-actions full">
+                                <button class="remove-ingredient" type="button">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions mt-sm">
+                        <button id="add-ingredient" class="primary" type="button">Add Ingredient</button>
                     </div>
                 </div>
                 <div class="form-actions full">
@@ -38,5 +47,62 @@
             </form>
         </section>
     </main>
+    <script>
+        const ingredientList = document.getElementById("ingredient-list");
+        const addIngredientButton = document.getElementById("add-ingredient");
+
+        function updateRemoveButtons() {
+            const rows = ingredientList.querySelectorAll(".ingredient-row");
+            rows.forEach((row) => {
+                row.querySelector(".remove-ingredient").disabled = rows.length === 1;
+            });
+        }
+
+        function updateIngredientSelect(row) {
+            const ingredientSelect = row.querySelector('select[name="ingredient[]"]');
+            const newIngredientInput = row.querySelector('input[name="new_ingredient[]"]');
+
+            ingredientSelect.disabled = newIngredientInput.value.trim() !== "";
+        }
+
+        addIngredientButton.addEventListener("click", () => {
+            const firstRow = ingredientList.querySelector(".ingredient-row");
+            const newRow = firstRow.cloneNode(true);
+
+            newRow.querySelectorAll("input").forEach((input) => {
+                input.value = "";
+            });
+            newRow.querySelectorAll("select").forEach((select) => {
+                select.disabled = false;
+                select.selectedIndex = 0;
+            });
+
+            ingredientList.appendChild(newRow);
+            updateRemoveButtons();
+        });
+
+        ingredientList.addEventListener("click", (event) => {
+            if (!event.target.classList.contains("remove-ingredient")) {
+                return;
+            }
+
+            const rows = ingredientList.querySelectorAll(".ingredient-row");
+            if (rows.length > 1) {
+                event.target.closest(".ingredient-row").remove();
+                updateRemoveButtons();
+            }
+        });
+
+        ingredientList.addEventListener("input", (event) => {
+            if (event.target.name !== "new_ingredient[]") {
+                return;
+            }
+
+            updateIngredientSelect(event.target.closest(".ingredient-row"));
+        });
+
+        updateRemoveButtons();
+        ingredientList.querySelectorAll(".ingredient-row").forEach(updateIngredientSelect);
+    </script>
 </body>
 {% endblock %}
