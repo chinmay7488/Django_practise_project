@@ -1,0 +1,88 @@
+{% extends "Recipe_Meal_Planner/base.html" %}
+{% block Title %}Add Ingredients{% endblock %}
+{% block content %}
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'Recipe_Meal_Planner:recipes' %}">Recipes</a><a href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Planner</a><a href="{% url 'Recipe_Meal_Planner:shopping_list' %}">Shopping List</a></nav>
+    </header>
+    <main class="page">
+        <section class="panel">
+            <p class="eyebrow">Create ingredients</p>
+            <h1>Add Ingredients</h1>
+
+            {% if success_message %}
+                <p class="notice success">{{ success_message }}</p>
+            {% endif %}
+
+            {% if error_messages %}
+                <div class="notice error">
+                    {% for error in error_messages %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="mt-lg">
+                {% csrf_token %}
+                <div id="ingredient-list" class="ingredient-list">
+                    <div class="ingredient-row form-grid">
+                        <label>Ingredient Name<input name="name[]" type="text" placeholder="Pasta"></label>
+                        <label>Calories Per Gram<input name="calories_gram[]" type="number" placeholder="4"></label>
+                        <label>Calories Per Cup<input name="calories_cup[]" type="number" placeholder="200"></label>
+                        <label>Calories Per Piece<input name="calories_piece[]" type="number" placeholder="80"></label>
+                        <div class="form-actions full">
+                            <button class="remove-ingredient" type="button">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions mt-md">
+                    <button id="add-ingredient" class="primary" type="button">Add Another</button>
+                    <button class="primary" type="submit">Save Ingredients</button>
+                    <a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Back to Recipe Form</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const ingredientList = document.getElementById("ingredient-list");
+        const addIngredientButton = document.getElementById("add-ingredient");
+
+        function updateRemoveButtons() {
+            const rows = ingredientList.querySelectorAll(".ingredient-row");
+            rows.forEach((row) => {
+                row.querySelector(".remove-ingredient").disabled = rows.length === 1;
+            });
+        }
+
+        addIngredientButton.addEventListener("click", () => {
+            const firstRow = ingredientList.querySelector(".ingredient-row");
+            const newRow = firstRow.cloneNode(true);
+
+            newRow.querySelectorAll("input").forEach((input) => {
+                input.value = "";
+            });
+
+            ingredientList.appendChild(newRow);
+            updateRemoveButtons();
+        });
+
+        ingredientList.addEventListener("click", (event) => {
+            if (!event.target.classList.contains("remove-ingredient")) {
+                return;
+            }
+
+            const rows = ingredientList.querySelectorAll(".ingredient-row");
+            if (rows.length > 1) {
+                event.target.closest(".ingredient-row").remove();
+                updateRemoveButtons();
+            }
+        });
+
+        updateRemoveButtons();
+    </script>
+</body>
+{% endblock %}

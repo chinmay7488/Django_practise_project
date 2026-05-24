@@ -1,0 +1,47 @@
+{% extends "Recipe_Meal_Planner/base.html" %} 
+{% block Title %}Recipe Detail{% endblock %}
+{% block content %}
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'Recipe_Meal_Planner:recipes' %}">Recipes</a><a href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a><a href="{% url 'Recipe_Meal_Planner:recipe_delete' %}">Delete</a><a href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Planner</a></nav>
+    </header>
+    <main class="page">
+        <section class="two-column">
+            <div class="detail-photo"></div>
+            <article class="panel">
+                <p class="eyebrow">Dinner</p>
+                <h1>Herbed Lemon Pasta</h1>
+                <p>Bright pasta with herbs, chickpeas, greens, and a lemon yogurt finish.</p>
+                <div class="tag-row"><span class="tag mint">35 min</span><span class="tag">Vegetarian</span><span class="tag lemon">2 servings</span></div>
+                <div class="form-grid mt-lg">
+                    <label>Servings<select><option>2 people</option><option>4 people</option><option>6 people</option></select></label>
+                    <label>Meal Slot<select><option>Dinner</option><option>Lunch</option><option>Breakfast</option></select></label>
+                </div>
+                <div class="form-actions mt-md"><a class="button primary" href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Add to Planner</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipes' %}">Back</a></div>
+            </article>
+        </section>
+        <section class="two-column section">
+            <div class="panel">
+                <h2>Ingredients</h2>
+                <table class="table">
+                    <tr><th>Item</th><th>Quantity</th><th>Unit</th></tr>
+                    <tr><td>Whole wheat pasta</td><td>180</td><td>g</td></tr>
+                    <tr><td>Chickpeas</td><td>1</td><td>cup</td></tr>
+                    <tr><td>Lemon</td><td>1</td><td>piece</td></tr>
+                </table>
+            </div>
+            <div class="panel">
+                <h2>Instructions</h2>
+                <p>Cook pasta, fold with chickpeas and greens, then finish with herbs, lemon, and yogurt.</p>
+                <div class="macro-grid">
+                    <div class="macro"><strong>520</strong><br><span class="small">calories</span></div>
+                    <div class="macro"><strong>24g</strong><br><span class="small">protein</span></div>
+                    <div class="macro"><strong>68g</strong><br><span class="small">carbs</span></div>
+                    <div class="macro"><strong>14g</strong><br><span class="small">fat</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+{% endblock %}

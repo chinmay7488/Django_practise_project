@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'TODO',
     'Text_Analyzer',
-    "Recipe_Meal_Planner"
+    "Recipe_Meal_Planner",
+    "MealMatrix"
 ]
 
 MIDDLEWARE = [
@@ -123,3 +125,9 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# Base URL to serve media files (e.g., http://127.0.0)
+MEDIA_URL = '/media/'
+
+# Path where media files are physically stored on the server
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

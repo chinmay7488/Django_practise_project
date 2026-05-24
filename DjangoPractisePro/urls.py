@@ -18,6 +18,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,4 +27,8 @@ urlpatterns = [
     path('TODO/', include('TODO.urls')),
     path('Text_Analyzer/', include('Text_Analyzer.urls')),
     path('Recipe_Meal_Planner/', include('Recipe_Meal_Planner.urls')),
+    path('MealMatrix/', include('MealMatrix.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

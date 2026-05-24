@@ -1,0 +1,35 @@
+{% extends "Recipe_Meal_Planner/base.html" %} 
+{% block Title %}Smart Meal Generator{% endblock %}
+{% block content %}
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Planner</a><a class="active" href="{% url 'Recipe_Meal_Planner:smart_generator' %}">Generator</a><a href="{% url 'Recipe_Meal_Planner:nutrition' %}">Nutrition</a></nav>
+    </header>
+    <main class="page">
+        <section class="two-column">
+            <form class="panel">
+                <p class="eyebrow">Automate my week</p>
+                <h1>Smart Meal Generator</h1>
+                <div class="form-grid mt-lg">
+                    <label>Daily Calories<input type="number" placeholder="2000"></label>
+                    <label>Diet Preference<select><option>Vegetarian</option><option>High Protein</option><option>Balanced</option></select></label>
+                    <label>Maximum Prep Time<select><option>Under 30 minutes</option><option>Under 60 minutes</option></select></label>
+                    <label>Category Focus<select><option>Breakfast, Lunch, Dinner</option><option>Dinner only</option></select></label>
+                    <div class="form-actions full"><button class="primary" type="button">Automate My Week</button></div>
+                </div>
+            </form>
+            <div class="panel">
+                <h2>Generated Preview</h2>
+                <ul class="check-list">
+                    <li><span>Monday</span><strong>Herbed Lemon Pasta</strong></li>
+                    <li><span>Tuesday</span><strong>Paneer Grain Bowl</strong></li>
+                    <li><span>Wednesday</span><strong>Lentil Soup</strong></li>
+                    <li><span>Thursday</span><strong>Tofu Stir Fry</strong></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+</body>
+{% endblock %}

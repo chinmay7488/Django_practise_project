@@ -1,0 +1,51 @@
+{% extends "Recipe_Meal_Planner/base.html" %} 
+{% block Title %}Recipes{% endblock %}
+{% block content %}
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav">
+            <a href="{% url 'Recipe_Meal_Planner:home' %}">Dashboard</a>
+            <a class="active" href="{% url 'Recipe_Meal_Planner:recipes' %}">Recipes</a>
+            <a href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Planner</a>
+            <a href="{% url 'Recipe_Meal_Planner:shopping_list' %}">Shopping List</a>
+            <a href="{% url 'Recipe_Meal_Planner:pantry' %}">Pantry</a>
+        </nav>
+    </header>
+    <main class="page">
+        <section class="section">
+            <p class="eyebrow">Recipe database</p>
+            <h1>Recipes</h1>
+            <div class="toolbar mt-md">
+                <input type="search" placeholder="Search by title">
+                <select><option>All categories</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option></select>
+                <select><option>Any time</option><option>Under 30 minutes</option><option>30-60 minutes</option></select>
+                <a class="button primary" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Add Recipe</a>
+            </div>
+        </section>
+        <section class="recipe-grid">
+            <article class="recipe-card">
+                <div class="recipe-photo"></div>
+                <div class="tag-row"><span class="tag mint">Dinner</span><span class="tag peach">35 min</span></div>
+                <h2>Herbed Lemon Pasta</h2>
+                <p>Bright pasta with herbs, chickpeas, and soft greens.</p>
+                <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>
+            </article>
+            <article class="recipe-card">
+                <div class="recipe-photo"></div>
+                <div class="tag-row"><span class="tag mint">Breakfast</span><span class="tag peach">15 min</span></div>
+                <h2>Berry Protein Oats</h2>
+                <p>Warm oats with berries, almond butter, and seeds.</p>
+                <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>
+            </article>
+            <article class="recipe-card">
+                <div class="recipe-photo"></div>
+                <div class="tag-row"><span class="tag mint">Lunch</span><span class="tag peach">25 min</span></div>
+                <h2>Paneer Grain Bowl</h2>
+                <p>Roasted paneer, millet, cucumber, and mint yogurt.</p>
+                <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>
+            </article>
+        </section>
+    </main>
+</body>
+{% endblock %}

@@ -1,0 +1,150 @@
+ingredient_name,calories per gram,calories per cup,calories per piece
+All-purpose flour,3.64,455,0
+White rice (uncooked),3.6,685,0
+Brown rice (uncooked),3.6,680,0
+Rolled oats,3.79,300,0
+Quinoa (uncooked),3.68,626,0
+Whole wheat flour,3.39,407,0
+Cornstarch,3.81,488,0
+Baking powder,0.53,100,0
+Baking soda,0.0,0,0
+Sugar (granulated),3.87,774,0
+Brown sugar,3.8,836,0
+Powdered sugar,3.89,467,0
+Cocoa powder,2.28,196,0
+Yeast (dry),3.25,450,0
+Breadcrumbs,3.95,426,0
+Cornmeal,3.62,442,0
+Couscous (uncooked),3.76,650,0
+Semolina,3.6,600,0
+Egg noodles (dry),3.8,150,0
+Spaghetti (dry),3.71,340,0
+Whole milk,0.61,149,0
+Skim milk,0.35,86,0
+Heavy cream,3.4,821,0
+Butter,7.17,1625,102 (per stick)
+Cheddar cheese,4.03,455,113 (per slice)
+Mozzarella cheese,2.8,314,80 (per stick)
+Parmesan cheese (grated),4.31,431,0
+Cream cheese,3.42,793,97 (per oz)
+Greek yogurt (whole milk),0.97,240,0
+Sour cream,1.93,445,0
+Large egg,1.43,347,72
+Egg whites,0.52,126,17
+Cottage cheese,0.98,220,0
+Ricotta cheese,1.74,428,0
+Ghee (clarified butter),8.76,1875,0
+Almond milk (unsweetened),0.13,30,0
+Soy milk (unsweetened),0.43,105,0
+Coconut milk (canned),1.97,445,0
+Feta cheese,2.64,396,0
+Chicken breast (raw),1.2,240,204 (per breast)
+Bacon (raw),4.17,850,54 (per slice)
+Turkey breast (raw),1.14,235,135 (per cutlet)
+Ground turkey,1.43,310,0
+Ribeye steak (raw),2.91,640,580 (per steak)
+Sirloin steak (raw),1.42,312,315 (per steak)
+Lamb chop (raw),2.02,440,140 (per chop)
+Prosciutto,2.42,266,35 (per slice)
+Pepperoni,5.04,550,10 (per slice)
+Ham (sliced deli),1.1,165,34 (per slice)
+Salmon fillet (raw),1.42,312,284 (per fillet)
+Tuna (canned in water),1.16,179,0
+Shrimp (raw),0.85,120,7 (per large shrimp)
+Cod fillet (raw),0.82,180,123 (per fillet)
+Tilapia fillet (raw),0.96,210,111 (per fillet)
+Crab meat,0.87,135,0
+Lobster meat,0.89,142,0
+Scallops (raw),0.69,110,15 (per large scallop)
+Sardines (canned in oil),2.08,310,25 (per fish)
+Mussels (raw),0.86,130,0
+Yellow onion,0.4,64,44
+Garlic,1.49,203,4 (per clove)
+Tomato,0.18,32,22
+Spinach (raw),0.23,7,0
+Broccoli,0.34,31,11 (per floret)
+Carrot,0.41,52,25
+Russet potato,0.79,118,168
+Sweet potato,0.86,114,112
+Bell pepper (green),0.2,30,24
+Bell pepper (red),0.31,46,37
+Zucchini,0.17,21,33
+Cucumber,0.15,16,45
+Celery,0.16,16,6 (per stalk)
+Asparagus,0.2,27,4 (per spear)
+Cauliflower,0.25,27,2 (per floret)
+Kale,0.49,33,0
+Green beans,0.31,31,0
+Mushrooms (white button),0.22,15,4
+Cabbage (green),0.25,22,225 (per head)
+Avocado,1.6,240,227
+Brussels sprouts,0.43,38,8
+Green peas,0.81,117,0
+Corn (kernels),0.86,132,59 (per ear)
+Eggplant,0.25,20,115
+Ginger root,0.8,80,0
+Lettuce (iceberg),0.14,10,75 (per head)
+Lettcue (romaine),0.17,8,0
+Pumpkin (puree),0.34,83,0
+Radish,0.16,19,1
+Jalapeno pepper,0.29,26,4
+Apple (with skin),0.52,65,95
+Banana,0.89,134,105
+Strawberries,0.32,49,4
+Blueberries,0.57,84,1
+Raspberries,0.52,64,1
+Lemon,0.29,61,17
+Lime,0.3,60,20
+Orange,0.47,85,62
+Grapes,0.69,104,3
+Pineapple,0.5,82,0
+Mango,0.6,99,201
+Peach,0.39,60,59
+Pear,0.57,80,101
+Watermelon,0.3,46,0
+Cantaloupe,0.34,54,0
+Cherry,0.5,74,5
+Kiwi,0.61,110,42
+Plum,0.46,76,30
+Blackberries,0.43,62,1
+Grapefruit,0.42,97,104
+Black beans (canned),0.91,218,0
+Chickpeas/Garbanzo (canned),1.19,286,0
+Kidney beans (canned),0.85,204,0
+Peanuts,5.67,828,0
+Almonds,5.79,822,7
+Walnuts,6.54,765,26 (per half)
+Cashews,5.53,786,9
+Pecans,6.91,753,10 (per half)
+Chia seeds,4.86,797,0
+Flax seeds,5.34,897,0
+Sunflower seeds (hulled),5.84,821,0
+Pumpkin seeds/Pepitas,5.59,747,0
+Sesame seeds,5.73,916,0
+Peanut butter,5.88,1517,0
+Almond butter,6.14,1572,0
+Olive oil,8.84,1910,0
+Vegetable oil,8.84,1927,0
+Coconut oil,8.62,1872,0
+Sesame oil,8.84,1910,0
+Soy sauce,0.53,122,0
+Mayonnaise,6.8,1496,0
+Dijon mustard,1.5,240,0
+Ketchup,1.12,271,0
+Apple cider vinegar,0.21,50,0
+Balsamic vinegar,0.88,224,0
+Hot sauce,0.11,25,0
+Tomato paste,0.82,215,0
+Salsa,0.36,91,0
+Maple syrup,2.6,840,0
+Honey,3.04,1031,0
+Agave nectar,3.1,960,0
+Vanilla extract,2.88,600,0
+Tofu (firm),0.7,176,0
+Tempeh,1.93,320,0
+Seitan,3.7,520,0
+Chocolate chips (semi-sweet),4.8,804,0
+Dark chocolate (70%),5.98,1016,170 (per bar)
+Marshmallows,3.18,159,23 (per large)
+Gelatin (powder),3.35,362,0
+Coconut flakes (unsweetened),6.6,400,0
