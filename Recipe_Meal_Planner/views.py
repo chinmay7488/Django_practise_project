@@ -117,7 +117,8 @@ def Add_ingredients(request):
     return render(request, "Recipe_Meal_Planner/ingredient_form.html")
 
 def Recipes_page(request):
-    return render(request, "Recipe_Meal_Planner/recipes.html")
+    recipes = Recipes.objects.all()
+    return render(request, "Recipe_Meal_Planner/recipes.html", context={"Recipes" : recipes})
 
 def Register(request):
     if request.method == "POST":

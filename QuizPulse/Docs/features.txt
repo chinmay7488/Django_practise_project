@@ -1,0 +1,33 @@
+1. Core Logic Features (The "Brain" of the App)
+ 	1.Session-Based State Tracking: * The Challenge: If a quiz has 10 questions, you shouldn't show them all on one massive page. You need to 	  show one question at a time.
+		The Logic: Use Django’s built-in request.session to track which question the user is currently on (e.g., 					request.session['current_question_index'] = 0), what answers they have selected so far, and their running score. This prevents them 		from losing progress if they accidentally refresh the page.
+
+	2. Answer Validation Engine:
+		When a user selects an option and clicks "Next", your Python backend must intercept the submitted choice_id, check it against the 		database, look at the is_correct boolean, and update the session score.
+
+	3. The Results Calculator:
+		At the final submission, Django flushes the session data, calculates the total correct answers, computes a percentage, and determines 		if the user "Passed" or "Failed" based on a threshold (e.g., 70%).
+	4. Dynamic Quiz Setup Form (Filtering Endpoints)
+		Instead of hardcoding a general quiz, build a configuration dashboard. Open Trivia DB allows you to pass specific query parameters to 		customize the payload. Your application should let users select:
+		a. Number of Questions (amount=10, amount=20)
+		b. Category via IDs (e.g., category=18 for Science: Computers)
+		c. Difficulty level (difficulty=easy, medium, hard)
+		d. Question Type (type=multiple or type=boolean)
+
+2. Essential User Interface Features
+	1. Dynamic Next/Submit Buttons:
+		The Template Logic: Use template tags to control button behavior. If it’s the last question in the quiz, the "Next" button should 		automatically change to a "Submit Quiz" button.
+
+	2. Radio Button Handling:
+		Ensuring that standard HTML forms submit only one choice per question and link it back cleanly to the view.
+
+3. Advanced Logic Upgrades (To Push Your Skills Further)
+Once you get the basics working, add these features to turn it into an intermediate/advanced portfolio piece:
+	1. The Countdown Timer: * Implement a JavaScript timer on the frontend that matches the quiz's time_limit_minutes.
+		The Backend Catch: JavaScript can be manipulated by users. You must write server-side validation logic in Django that timestamps when 		the user started the quiz and blocks them from submitting if the actual elapsed time exceeds the limit.
+
+	2. Randomization Engine:
+		The Logic: Use .order_by('?') in your Django ORM query to pull questions in a completely random order every single time a user starts 		the quiz, ensuring no two attempts look identical.
+
+	3. Instant Answer Review:
+		A post-quiz summary page that loops through all questions, shows the user exactly what they chose, highlights correct answers in 		green, and displays incorrect selections in red.

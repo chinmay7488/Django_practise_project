@@ -24,27 +24,19 @@
             </div>
         </section>
         <section class="recipe-grid">
-            <article class="recipe-card">
-                <div class="recipe-photo"></div>
-                <div class="tag-row"><span class="tag mint">Dinner</span><span class="tag peach">35 min</span></div>
-                <h2>Herbed Lemon Pasta</h2>
-                <p>Bright pasta with herbs, chickpeas, and soft greens.</p>
-                <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>
-            </article>
-            <article class="recipe-card">
-                <div class="recipe-photo"></div>
-                <div class="tag-row"><span class="tag mint">Breakfast</span><span class="tag peach">15 min</span></div>
-                <h2>Berry Protein Oats</h2>
-                <p>Warm oats with berries, almond butter, and seeds.</p>
-                <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>
-            </article>
-            <article class="recipe-card">
-                <div class="recipe-photo"></div>
-                <div class="tag-row"><span class="tag mint">Lunch</span><span class="tag peach">25 min</span></div>
-                <h2>Paneer Grain Bowl</h2>
-                <p>Roasted paneer, millet, cucumber, and mint yogurt.</p>
-                <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>
-            </article>
+            {% if Recipes %}
+                {% for recipe in Recipes %}
+                <article class="recipe-card">
+                    <div class="recipe-photo"></div>
+                    <div class="tag-row"><span class="tag mint">{{ recipe.Category }}</span><span class="tag peach">{{ recipe.Prep_time }} min</span></div>
+                    <h2>{{ recipe.Title }}</h2>
+                    <p>{{ recipe.Description }}</p>
+                    <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>
+                </article>
+                {% endfor %}
+            {% else %}
+             <h2>No recipes found</h2>
+             {%endif%}
         </section>
     </main>
 </body>
