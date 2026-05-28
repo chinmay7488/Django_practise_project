@@ -1,0 +1,36 @@
+{% extends "MealMatrix/base.html" %}
+{% block Title %}Meal Categories{% endblock %}
+{% block content %}
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'MealMatrix:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav">
+            <a href="{% url 'MealMatrix:home' %}">Dashboard</a>
+            <a href="{% url 'MealMatrix:recipes' %}">Recipes</a>
+            <a class="active" href="{% url 'MealMatrix:categories' %}">Categories</a>
+            <a href="{% url 'MealMatrix:meal_planner' %}">Planner</a>
+            <a href="{% url 'MealMatrix:shopping_list' %}">Shopping List</a>
+            <a href="{% url 'MealMatrix:pantry' %}">Pantry</a>
+        </nav>
+    </header>
+
+    <main class="page">
+        <section class="section">
+            <p class="eyebrow">MealDB categories</p>
+            <h1>Explore meal categories</h1>
+            <p>Browse the available meal groups and use them as a starting point for recipe discovery.</p>
+        </section>
+
+        <section class="category-grid">
+            {% for cat in Categories %}
+            <a href="{% url 'MealMatrix:recipes' %}?category={{ cat.idCategory }}" class="category-card-link">
+                <article class="category-card">
+                    <img src="{{ cat.strCategoryThumb }}" alt="{{ cat.strCategory }} thumbnail">
+                    <h2>{{ cat.strCategory }}</h2>
+                </article>
+            </a>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+{% endblock %}

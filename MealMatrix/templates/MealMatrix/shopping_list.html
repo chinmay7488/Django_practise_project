@@ -1,11 +1,11 @@
-{% extends "Recipe_Meal_Planner/base.html" %}  
+{% extends "MealMatrix/base.html" %}  
 {% block Title %}Shopping List{% endblock %}
 {% block content %}
 
 <body>
     <header class="topbar">
-        <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
-        <nav class="nav"><a href="{% url 'Recipe_Meal_Planner:meal_planner' %}">Planner</a><a class="active" href="{% url 'Recipe_Meal_Planner:shopping_list' %}">Shopping List</a><a href="{% url 'Recipe_Meal_Planner:export' %}">Export</a></nav>
+        <a class="brand" href="{% url 'MealMatrix:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'MealMatrix:meal_planner' %}">Planner</a><a class="active" href="{% url 'MealMatrix:shopping_list' %}">Shopping List</a><a href="{% url 'MealMatrix:export' %}">Export</a></nav>
     </header>
     <main class="page">
         <section class="two-column">
@@ -19,7 +19,7 @@
                     <li><span>Fresh berries</span><strong>500 g</strong></li>
                     <li><span>Spinach</span><strong>2 bunches</strong></li>
                 </ul>
-                <a class="button primary" href="{% url 'Recipe_Meal_Planner:export' %}">Export List</a>
+                <a class="button primary" href="{% url 'MealMatrix:export' %}">Export List</a>
             </div>
             <div class="panel">
                 <h2>Meal Sources</h2>

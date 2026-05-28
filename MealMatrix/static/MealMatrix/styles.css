@@ -166,6 +166,10 @@ button.primary {
     padding: 36px 0 64px;
 }
 
+.recipes-page {
+    width: min(1600px, calc(100% - 32px));
+}
+
 .hero,
 .section {
     margin-bottom: 28px;
@@ -260,6 +264,7 @@ p {
 }
 
 .recipe-grid,
+.category-grid,
 .three-column {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -348,6 +353,54 @@ p {
 .recipe-card {
     display: grid;
     gap: 14px;
+}
+
+.recipes-page .recipe-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.recipes-page .recipe-card {
+    align-content: start;
+    padding: 14px;
+}
+
+.recipes-page .recipe-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.recipes-page .recipe-card h2 {
+    font-size: 1.2rem;
+}
+
+.category-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.category-card {
+    display: grid;
+    gap: 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(27, 36, 48, 0.88);
+    box-shadow: var(--shadow);
+}
+
+.category-card img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: contain;
+    padding: 16px;
+    background:
+        linear-gradient(135deg, rgba(158, 231, 208, 0.18), rgba(201, 183, 255, 0.18)),
+        var(--panel-soft);
+}
+
+.category-card h2 {
+    padding: 0 18px 18px;
 }
 
 .flat-card {
@@ -590,6 +643,7 @@ button:disabled {
 
     .stats-grid,
     .recipe-grid,
+    .category-grid,
     .three-column,
     .macro-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -608,6 +662,7 @@ button:disabled {
 
     .stats-grid,
     .recipe-grid,
+    .category-grid,
     .three-column,
     .macro-grid,
     .form-grid {

@@ -1,11 +1,11 @@
-{% extends "Recipe_Meal_Planner/base.html" %}  
+{% extends "MealMatrix/base.html" %}  
 {% block Title %}Pantry Matcher{% endblock %}
 {% block content %}
 
 <body>
     <header class="topbar">
-        <a class="brand" href="{% url 'Recipe_Meal_Planner:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
-        <nav class="nav"><a href="{% url 'Recipe_Meal_Planner:home' %}">Dashboard</a><a href="{% url 'Recipe_Meal_Planner:recipes' %}">Recipes</a><a class="active" href="{% url 'Recipe_Meal_Planner:pantry' %}">Pantry</a></nav>
+        <a class="brand" href="{% url 'MealMatrix:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'MealMatrix:home' %}">Dashboard</a><a href="{% url 'MealMatrix:recipes' %}">Recipes</a><a href="{% url 'MealMatrix:categories' %}">Categories</a><a class="active" href="{% url 'MealMatrix:pantry' %}">Pantry</a></nav>
     </header>
     <main class="page">
         <section class="two-column">

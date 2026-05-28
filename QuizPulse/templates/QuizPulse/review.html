@@ -1,0 +1,30 @@
+{% extends 'QuizPulse/base.html' %}
+
+{% block title %}Answer Review | QuizPulse{% endblock %}
+
+{% block content %}
+<section class="review-header">
+    <div>
+        <p class="eyebrow">Instant answer review</p>
+        <h1>Question Summary</h1>
+    </div>
+    <a class="secondary-button" href="{% url 'QuizPulse:restart' %}">New Quiz</a>
+</section>
+
+<section class="review-list">
+    {% for item in review_items %}
+        <article class="review-card {% if item.is_correct %}correct{% else %}incorrect{% endif %}">
+            <div class="review-status">{% if item.is_correct %}Correct{% else %}Incorrect{% endif %}</div>
+            <h2>{{ forloop.counter }}. {{ item.question.question }}</h2>
+            <p>Your answer: <strong>{{ item.selected }}</strong></p>
+            <p>Correct answer: <strong>{{ item.question.answer }}</strong></p>
+        </article>
+    {% empty %}
+        <article class="empty-state">
+            <h2>No quiz attempt yet</h2>
+            <p>Start a quiz first, then your answer review will appear here.</p>
+            <a class="primary-button" href="{% url 'QuizPulse:home' %}">Go to Setup</a>
+        </article>
+    {% endfor %}
+</section>
+{% endblock %}

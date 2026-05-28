@@ -28,6 +28,7 @@ urlpatterns = [
     path('Text_Analyzer/', include('Text_Analyzer.urls')),
     path('Recipe_Meal_Planner/', include('Recipe_Meal_Planner.urls')),
     path('MealMatrix/', include('MealMatrix.urls')),
+    path('QuizPulse/', include('QuizPulse.urls')),
 ]
 
 if settings.DEBUG:

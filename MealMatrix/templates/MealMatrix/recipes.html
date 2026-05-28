@@ -1,0 +1,56 @@
+{% extends "MealMatrix/base.html" %} 
+{% block Title %}Recipes{% endblock %}
+{% block content %}
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'MealMatrix:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav">
+            <a href="{% url 'MealMatrix:home' %}">Dashboard</a>
+            <a class="active" href="{% url 'MealMatrix:recipes' %}">Recipes</a>
+            <a href="{% url 'MealMatrix:categories' %}">Categories</a>
+            <a href="{% url 'MealMatrix:meal_planner' %}">Planner</a>
+            <a href="{% url 'MealMatrix:shopping_list' %}">Shopping List</a>
+            <a href="{% url 'MealMatrix:pantry' %}">Pantry</a>
+        </nav>
+    </header>
+    <main class="page recipes-page">
+        <section class="section">
+            <p class="eyebrow">Recipe database</p>
+            <h1>Recipes</h1>
+            <div class="toolbar mt-md">
+            <form method="GET" action="{% url 'MealMatrix:recipes' %}" id="filter-form">
+                <input type="search" placeholder="Search by title">
+                <select name="category" onchange="this.form.submit()">
+                    <option> All Category</option>
+                    {% for cat in CategoryList %}
+                        <option value={{cat.idCategory}} {% if cat.strCategory == Category %}selected{% endif %}>{{ cat.strCategory }}</option>
+                    {% endfor %}
+                </select>
+                <select name="ingredient" onchange="this.form.submit()">
+                    <option> All Ingredient</option>
+                    {% for ing in IngredientList %}
+                        <option value={{ing.idIngredient}} {% if cat.strIngredient == CateIngredientgory %}selected{% endif %}>{{ ing.strIngredient }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+                <a class="button primary" href="{% url 'MealMatrix:recipe_form' %}">Add Recipe</a>
+            </div>
+        </section>
+        <section class="recipe-grid">
+            {% if Recipes %}
+                {% for recipe in Recipes %}
+                    <article class="recipe-card">
+                        <img src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }} thumbnail">
+                        <div class="tag-row"><span class="tag mint">{{ Category }}</span></div>
+                        <h2>{{ recipe.strMeal }}</h2>
+                        <p>{{ recipe.Description }}</p>
+                        <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>
+                    </article>
+                {% endfor %}
+            {% else %}
+             <h2>No recipes found</h2>
+             {%endif%}
+        </section>
+    </main>
+</body>
+{% endblock %}

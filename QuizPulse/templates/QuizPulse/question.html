@@ -1,0 +1,49 @@
+{% extends 'QuizPulse/base.html' %}
+
+{% block title %}Question {{ question_number }} | QuizPulse{% endblock %}
+
+{% block content %}
+<section class="quiz-panel">
+    <div class="quiz-meta">
+        <span>Question {{ question_number }} of {{ total_questions }}</span>
+        <span id="countdown" data-seconds="{{ remaining_seconds }}">{{ remaining_seconds }}s</span>
+    </div>
+
+    <div class="progress-track">
+        <div class="progress-fill" style="width: {% widthratio question_number total_questions 100 %}%"></div>
+    </div>
+
+    <h1>{{ question.question }}</h1>
+
+    <form method="post" class="answer-form">
+        {% csrf_token %}
+        <div class="choice-grid">
+            {% for choice in question.choices %}
+                <label class="choice-card">
+                    <input type="radio" name="answer" value="{{ choice }}" required>
+                    <span>{{ choice }}</span>
+                </label>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="primary-button">
+            {% if is_last_question %}Submit Quiz{% else %}Next Question{% endif %}
+        </button>
+    </form>
+</section>
+
+<script>
+    const timer = document.getElementById("countdown");
+    let remaining = Number(timer.dataset.seconds);
+
+    const interval = setInterval(() => {
+        remaining -= 1;
+        timer.textContent = `${Math.max(remaining, 0)}s`;
+
+        if (remaining <= 0) {
+            clearInterval(interval);
+            window.location.href = "{% url 'QuizPulse:results' %}";
+        }
+    }, 1000);
+</script>
+{% endblock %}

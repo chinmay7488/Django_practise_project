@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 
-app_name = "Recipe_Meal_Planner"
+app_name = "MealMatrix"
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -12,6 +12,7 @@ urlpatterns = [
     path("meal-planner/", views.Meal_Planner, name="meal_planner"),
     path("nutrition/", views.Nutrition, name="nutrition"),
     path("pantry/", views.Pantry, name="pantry"),
+    path("categories/", views.Categories_page, name="categories"),
     path("recipes/", views.Recipes_page, name="recipes"),
     path("recipes/delete/", views.Delete_recipe, name="recipe_delete"),
     path("recipes/add/", views.Add_recipe, name="recipe_add"),

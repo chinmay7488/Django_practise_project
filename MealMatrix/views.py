@@ -3,22 +3,39 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.models import User
 from .models import *
 import requests
+import random
 
-MealDB_BASE_url = "https://www.themealdb.com/api/json/v1/"
+MealDB_BASE_url = "https://www.themealdb.com/api/json/v1/1/"
 CalorieNinjas_API_KEY = 'hgjhLLbxtolxEeL2Ge1DUCTsIHYFrDQDS4qo2m92'
 CalorieNinjas_url = "https://api.calorieninjas.com/v1/nutrition?query="
-
+category_filter_addon = 'filter.php?c='
+ingredient_filter_addon = 'filter.php?i='
+ingredient_api_addon = 'list.php?i=list'
+Category_List =[]
+Ingredient_List =[]
 
 def home(request):
+    if len(Category_List) == 0:
+        category_url = f"{MealDB_BASE_url}{"categories.php"}"   
+        respone_cat = requests.get(category_url).json()['categories']
+        for cat in respone_cat:
+            Category_List.append(cat)
+
+    if len(Ingredient_List) == 0:
+        ingredient_url = f"{MealDB_BASE_url}{ingredient_api_addon}"
+        respone_ing = requests.get(ingredient_url).json()['meals']
+        for ing in respone_ing:
+            Ingredient_List.append(ing)
+
     if request.user.is_authenticated:
-        return render(request, "Recipe_Meal_Planner/index.html",context={
+        return render(request, "MealMatrix/index.html",context={
             "User" : request.user
         })
 
-    return render(request, "Recipe_Meal_Planner/index.html")
+    return render(request, "MealMatrix/index.html")
 
 def export_Recipe(request):
-    return render(request, "Recipe_Meal_Planner/export.html")
+    return render(request, "MealMatrix/export.html")
 
 def Login_page(request):
     if request.method == "POST":
@@ -32,36 +49,36 @@ def Login_page(request):
             #     request.session.set_expiry(1209600) 
             # else:
             #     request.session.set_expiry(0)
-            return redirect('Recipe_Meal_Planner:home')
+            return redirect('MealMatrix:home')
         else:
             error_messages =  "Invalid username or password."
 
-        return render(request, 'Recipe_Meal_Planner/index.html', {"error_messages": error_messages})
+        return render(request, 'MealMatrix/index.html', {"error_messages": error_messages})
 
-    return render(request, "Recipe_Meal_Planner/login.html")
+    return render(request, "MealMatrix/login.html")
 
 def logout_page(request):
     if request.method == "POST":
         auth_logout(request)
-        return redirect('Recipe_Meal_Planner:home')
+        return redirect('MealMatrix:home')
 
     auth_logout(request)
-    return redirect('Recipe_Meal_Planner:home')
+    return redirect('MealMatrix:home')
 
 def Meal_Planner(request):
-    return render(request, "Recipe_Meal_Planner/meal_planner.html")
+    return render(request, "MealMatrix/meal_planner.html")
 
 def Nutrition(request):
-    return render(request, "Recipe_Meal_Planner/nutrition.html")
+    return render(request, "MealMatrix/nutrition.html")
 
 def Pantry(request):
-    return render(request, "Recipe_Meal_Planner/pantry.html")
+    return render(request, "MealMatrix/pantry.html")
 
 def Delete_recipe(request):
-    return render(request, "Recipe_Meal_Planner/recipe_delete.html")
+    return render(request, "MealMatrix/recipe_delete.html")
 
 def Detail_recipe(request):
-    return render(request, "Recipe_Meal_Planner/recipe_detail.html")
+    return render(request, "MealMatrix/recipe_detail.html")
 
 def Add_recipe(request):
     # Ingredients_name = Ingredients.objects.all()
@@ -101,7 +118,7 @@ def Add_recipe(request):
     #         )
 
 
-    return render(request, "Recipe_Meal_Planner/recipe_form.html")
+    return render(request, "MealMatrix/recipe_form.html")
 
 def Add_ingredients(request):
     # if request.method=="POST":
@@ -118,30 +135,84 @@ def Add_ingredients(request):
     #             Calories_piece  =piece
 
     #         )
-    #     return redirect("Recipe_Meal_Planner:recipe_add")
+    #     return redirect("MealMatrix:recipe_add")
 
-    return render(request, "Recipe_Meal_Planner/ingredient_form.html")
+    return render(request, "MealMatrix/ingredient_form.html")
 
 def Recipes_page(request):
+    datacontext = {
+        "CategoryList" : Category_List,
+        "IngredientList" : Ingredient_List,
+    }
+    category_filter = request.GET.get('category')
+    ingredient_filter = request.GET.get('ingredient')
+    
+    url ="" 
+    cat = ""
+    ing=""
+    filt_recipes=[]
+    if category_filter:
+        for i in Category_List:
+            if i['idCategory'] == category_filter:
+                url = f"{MealDB_BASE_url}{category_filter_addon}{i['strCategory']}"
+                cat = i['strCategory']
+                filt_recipes = filt_recipes + (requests.get(url).json()['meals'])
+                break
+            
+    if ingredient_filter:
+        for i in Ingredient_List:
+            if i['idIngredient'] == ingredient_filter:
+                url = f"{MealDB_BASE_url}{ingredient_filter_addon}{i['idIngredient']}"
+                ing = i['idIngredient']
+                filt_recipes.append(requests.get(url).json()['meals'])
+                break
+
+    # print(filt_recipes)
+    if  filt_recipes: 
+        datacontext.update({'Recipes': filt_recipes, 'Category': cat, 'Ingredient': ing})
+        return render(request, 'MealMatrix/recipes.html', context= datacontext)
+
+    else:
+        recipes=[]
+        for cat in Category_List:
+            url = f"{MealDB_BASE_url}{category_filter_addon}{cat['strCategory']}"
+            recipes.extend(requests.get(url).json()['meals'])
+
+        random.shuffle(recipes)
+        datacontext.update({'Recipes': recipes, 'Category': cat, 'Ingredient': ing})
+        return render(request, 'MealMatrix/recipes.html', context= datacontext)
+
+    # if ingredient_filter:
+    #     for i in Ingredient_List:
+    #         if i['idIngredient'] == str(id):
+    #             print('Found in ingredientcls')
+    #             break        
+
+
     # Option B: Get all recipes in a major category (Uncomment if you prefer this)
     # api_url = "https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood"
     
-    try:
-        response = requests.get(api_url)
-        data = response.json()
-        all_meals = data.get('meals') or []
+    # try:
+    #     response = requests.get(api_url)
+    #     data = response.json()
+    #     all_meals = data.get('meals') or []
         
-        # Mix them up randomly so the homepage looks different on refresh
-        random.shuffle(all_meals)
+    #     # Mix them up randomly so the homepage looks different on refresh
+    #     random.shuffle(all_meals)
         
-        # Python slice syntax: Grab exactly the first 20 or 50 items
-        recipes_to_show = all_meals[:20] 
+    #     # Python slice syntax: Grab exactly the first 20 or 50 items
+    #     recipes_to_show = all_meals[:20] 
         
-    except Exception as e:
-        print(f"API Fetch Error: {e}")
-        recipes_to_show = []
+    # except Exception as e:
+    #     print(f"API Fetch Error: {e}")
+    #     recipes_to_show = []
 
-    return render(request, 'Recipe_Meal_Planner/recipes.html', {'recipes': recipes_to_show})
+    return render(request, 'MealMatrix/recipes.html')
+
+def Categories_page(request):
+   
+
+    return render(request, "MealMatrix/categories.html", context={"Categories": Category_List})
 
 def Register(request):
     # if request.method == "POST":
@@ -153,18 +224,18 @@ def Register(request):
     #     user = User.objects.filter(username=username).first()
 
     #     if user is not None and RecipeOwner.objects.filter(user=user).exists():
-    #         return render(request, 'Recipe_Meal_Planner/register.html', {"error_messages": "Username already taken!"})
+    #         return render(request, 'MealMatrix/register.html', {"error_messages": "Username already taken!"})
 
     #     if user is None:
     #         user = User.objects.create_user(username=username, email=email, password=password)
 
     #     RecipeOwner.objects.create(user=user, Phone_number=number)
-    #     return redirect('Recipe_Meal_Planner:login')
+    #     return redirect('MealMatrix:login')
 
-    return render(request, 'Recipe_Meal_Planner/register.html')
+    return render(request, 'MealMatrix/register.html')
 
 def Shopping_list(request):
-    return render(request, "Recipe_Meal_Planner/shopping_list.html")
+    return render(request, "MealMatrix/shopping_list.html")
 
 def Smart_Generator(request):
-    return render(request, "Recipe_Meal_Planner/smart_generator.html")
+    return render(request, "MealMatrix/smart_generator.html")

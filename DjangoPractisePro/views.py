@@ -15,7 +15,7 @@ def projects(request):
             "projects": [
                 {"name": "Recipe Meal Planner", "status": "incompleted", "url": "/Recipe_Meal_Planner/"},
                 {"name": "MealMatrix", "status": "Working on", "url": "/MealMatrix/"},
-                {"name": "Quiz Application", "status": "Working on"},
+                {"name": "Quiz Application", "status": "Working on", "url": "/QuizPulse/"},
             ],
         },
         {

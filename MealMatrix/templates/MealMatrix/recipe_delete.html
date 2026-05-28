@@ -1,0 +1,21 @@
+{% extends "MealMatrix/base.html" %} 
+{% block Title %}Delete Recipe{% endblock %}
+{% block content %}
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'MealMatrix:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'MealMatrix:recipes' %}">Recipes</a><a href="{% url 'MealMatrix:recipe_detail' %}">Recipe Detail</a></nav>
+    </header>
+    <main class="page">
+        <section class="auth-wrap">
+            <div class="auth-panel">
+                <p class="eyebrow">Confirm delete</p>
+                <h1>Delete Herbed Lemon Pasta?</h1>
+                <p>This static confirmation screen matches the recipe delete flow.</p>
+                <div class="form-actions"><button class="warn" type="button">Delete Recipe</button><a class="button" href="{% url 'MealMatrix:recipe_detail' %}">Keep Recipe</a></div>
+            </div>
+        </section>
+    </main>
+</body>
+{% endblock %}

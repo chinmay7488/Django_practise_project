@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'TODO',
     'Text_Analyzer',
     "Recipe_Meal_Planner",
-    "MealMatrix"
+    "MealMatrix",
+    "QuizPulse"
 ]
 
 MIDDLEWARE = [

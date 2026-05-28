@@ -1,0 +1,22 @@
+{% extends 'QuizPulse/base.html' %}
+
+{% block title %}Results | QuizPulse{% endblock %}
+
+{% block content %}
+<section class="result-panel">
+    <p class="eyebrow">{% if timed_out %}Time expired{% else %}Quiz complete{% endif %}</p>
+    <h1>{% if passed %}Passed{% else %}Needs practice{% endif %}</h1>
+    <p class="score-line">{{ score }} / {{ total_questions }} correct</p>
+
+    <div class="result-meter">
+        <div class="result-fill" style="width: {{ percentage }}%"></div>
+    </div>
+
+    <p class="intro">Your score is {{ percentage }}%. Passing starts at {{ pass_percentage }}%.</p>
+
+    <div class="action-row">
+        <a class="primary-button" href="{% url 'QuizPulse:review' %}">Review Answers</a>
+        <a class="secondary-button" href="{% url 'QuizPulse:restart' %}">Try Again</a>
+    </div>
+</section>
+{% endblock %}
