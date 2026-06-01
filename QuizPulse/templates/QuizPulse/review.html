@@ -5,26 +5,63 @@
 {% block content %}
 <section class="review-header">
     <div>
-        <p class="eyebrow">Instant answer review</p>
-        <h1>Question Summary</h1>
+        <p class="eyebrow">Quiz history</p>
+        <h1>Your Attempts</h1>
     </div>
     <a class="secondary-button" href="{% url 'QuizPulse:restart' %}">New Quiz</a>
 </section>
 
-<section class="review-list">
-    {% for item in review_items %}
-        <article class="review-card {% if item.is_correct %}correct{% else %}incorrect{% endif %}">
-            <div class="review-status">{% if item.is_correct %}Correct{% else %}Incorrect{% endif %}</div>
-            <h2>{{ forloop.counter }}. {{ item.question.question }}</h2>
-            <p>Your answer: <strong>{{ item.selected }}</strong></p>
-            <p>Correct answer: <strong>{{ item.question.answer }}</strong></p>
+<section class="attempt-list">
+    {% for attempt in attempts %}
+        <article class="attempt-card {% if selected_attempt.id == attempt.id %}active{% endif %}">
+            <div>
+                <p class="attempt-date">{{ attempt.date_played|date:"M d, Y h:i A" }}</p>
+                <h2>{{ attempt.category }}</h2>
+                <p>{{ attempt.difficulty|title }} &middot; {{ attempt.score }} / {{ attempt.total_questions }} correct</p>
+            </div>
+            <div class="attempt-actions">
+                <a class="secondary-button" href="{% url 'QuizPulse:review_attempt' attempt.id %}">View</a>
+                <form method="post" action="{% url 'QuizPulse:delete_attempt' attempt.id %}">
+                    {% csrf_token %}
+                    <button class="danger-button" type="submit">Delete</button>
+                </form>
+            </div>
         </article>
     {% empty %}
         <article class="empty-state">
             <h2>No quiz attempt yet</h2>
-            <p>Start a quiz first, then your answer review will appear here.</p>
+            <p>Start a quiz first, then your quiz history will appear here.</p>
             <a class="primary-button" href="{% url 'QuizPulse:home' %}">Go to Setup</a>
         </article>
     {% endfor %}
 </section>
+
+{% if selected_attempt %}
+    <section class="review-header detail-header">
+        <div>
+            <p class="eyebrow">Selected attempt</p>
+            <h1>Question Summary</h1>
+            <p class="intro">
+                {{ selected_attempt.category }} &middot; {{ selected_attempt.difficulty|title }} &middot;
+                {{ selected_attempt.score }} / {{ selected_attempt.total_questions }}
+            </p>
+        </div>
+    </section>
+
+    <section class="review-list">
+        {% for item in review_items %}
+            <article class="review-card {% if item.is_correct %}correct{% else %}incorrect{% endif %}">
+                <div class="review-status">{% if item.is_correct %}Correct{% else %}Incorrect{% endif %}</div>
+                <h2>{{ forloop.counter }}. {{ item.question_text }}</h2>
+                <p>Your answer: <strong>{{ item.user_selected_answer }}</strong></p>
+                <p>Correct answer: <strong>{{ item.correct_answer }}</strong></p>
+            </article>
+        {% empty %}
+            <article class="empty-state">
+                <h2>No answers saved</h2>
+                <p>This attempt does not have answer details yet.</p>
+            </article>
+        {% endfor %}
+    </section>
+{% endif %}
 {% endblock %}

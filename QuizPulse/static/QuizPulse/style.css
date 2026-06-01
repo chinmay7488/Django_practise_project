@@ -33,20 +33,26 @@ a {
 }
 
 .site-header {
-    padding: 18px 24px 0;
+    left: 0;
+    padding: 0;
+    position: sticky;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 10;
 }
 
 .nav {
     align-items: center;
-    background: rgba(255, 253, 248, 0.78);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
+    background: rgba(255, 253, 248, 0.94);
+    border-bottom: 1px solid rgba(236, 232, 223, 0.9);
+    box-shadow: 0 10px 28px rgba(78, 72, 104, 0.1);
     display: flex;
     justify-content: space-between;
-    margin: 0 auto;
-    max-width: 1080px;
-    padding: 14px 18px;
+    margin: 0;
+    min-height: 68px;
+    padding: 0 32px;
+    width: 100%;
 }
 
 .brand {
@@ -56,12 +62,21 @@ a {
 
 .nav-links {
     display: flex;
-    gap: 14px;
+    gap: 8px;
 }
 
 .nav-links a {
+    border-radius: 8px;
     color: var(--muted);
     font-weight: 700;
+    padding: 10px 14px;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+    background: var(--lilac);
+    color: var(--ink);
 }
 
 .page-shell {
@@ -72,6 +87,7 @@ a {
 
 .hero-panel,
 .form-panel,
+.auth-panel,
 .quiz-panel,
 .result-panel,
 .review-header,
@@ -89,6 +105,18 @@ a {
     justify-content: space-between;
     margin-bottom: 22px;
     padding: 34px;
+}
+
+.auth-panel {
+    align-items: center;
+    display: grid;
+    gap: 30px;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+    padding: 34px;
+}
+
+.auth-copy {
+    max-width: 520px;
 }
 
 .eyebrow {
@@ -135,9 +163,18 @@ h2 {
 }
 
 .form-panel,
+.auth-form,
 .quiz-panel,
 .result-panel {
     padding: 30px;
+}
+
+.auth-form {
+    background: rgba(255, 253, 248, 0.72);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    display: grid;
+    gap: 18px;
 }
 
 .setup-form {
@@ -154,7 +191,10 @@ label {
     gap: 8px;
 }
 
-select {
+select,
+input[type="text"],
+input[type="email"],
+input[type="password"] {
     background: var(--white);
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -164,8 +204,52 @@ select {
     padding: 0 14px;
 }
 
+.message-list {
+    display: grid;
+    gap: 10px;
+}
+
+.message {
+    border-radius: 8px;
+    font-weight: 800;
+    margin: 0;
+    padding: 12px 14px;
+}
+
+.message.error {
+    background: var(--rose);
+    color: #9a4058;
+}
+
+.message.warning {
+    background: var(--butter);
+    color: #735f1b;
+}
+
+.message.success {
+    background: var(--mint);
+    color: #2c7b51;
+}
+
+.global-messages {
+    margin-bottom: 18px;
+}
+
+.auth-switch {
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+
+.auth-switch a {
+    color: #6c5edf;
+}
+
 .primary-button,
-.secondary-button {
+.secondary-button,
+.danger-button {
     align-items: center;
     border: 0;
     border-radius: 8px;
@@ -186,6 +270,11 @@ select {
 .secondary-button {
     background: var(--sky);
     color: #266077;
+}
+
+.danger-button {
+    background: var(--rose);
+    color: #9a4058;
 }
 
 .setup-form .primary-button {
@@ -278,6 +367,53 @@ select {
     margin-bottom: 0;
 }
 
+.detail-header {
+    margin-top: 24px;
+}
+
+.attempt-list {
+    display: grid;
+    gap: 14px;
+}
+
+.attempt-card {
+    align-items: center;
+    background: rgba(255, 253, 248, 0.9);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.attempt-card.active {
+    border-color: #9b8df0;
+}
+
+.attempt-card h2,
+.attempt-card p {
+    margin-bottom: 6px;
+}
+
+.attempt-date {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.attempt-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.attempt-actions form {
+    margin: 0;
+}
+
 .review-list {
     display: grid;
     gap: 16px;
@@ -315,7 +451,9 @@ select {
 @media (max-width: 720px) {
     .nav,
     .hero-panel,
+    .auth-panel,
     .review-header,
+    .attempt-card,
     .quiz-meta,
     .action-row {
         align-items: stretch;
@@ -326,7 +464,15 @@ select {
         justify-content: space-between;
     }
 
+    .nav {
+        padding: 14px 18px;
+    }
+
     .setup-form {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-panel {
         grid-template-columns: 1fr;
     }
 
@@ -336,6 +482,8 @@ select {
 
     .hero-panel,
     .form-panel,
+    .auth-panel,
+    .auth-form,
     .quiz-panel,
     .result-panel {
         padding: 22px;

@@ -29,7 +29,7 @@
                 <select name="ingredient" onchange="this.form.submit()">
                     <option> All Ingredient</option>
                     {% for ing in IngredientList %}
-                        <option value={{ing.idIngredient}} {% if cat.strIngredient == CateIngredientgory %}selected{% endif %}>{{ ing.strIngredient }}</option>
+                        <option value={{ing.idIngredient}} {% if cat.strIngredient == Ingredient %}selected{% endif %}>{{ ing.strIngredient }}</option>
                     {% endfor %}
                 </select>
             </form>
@@ -41,7 +41,7 @@
                 {% for recipe in Recipes %}
                     <article class="recipe-card">
                         <img src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }} thumbnail">
-                        <div class="tag-row"><span class="tag mint">{{ Category }}</span></div>
+                        <div class="tag-row"><span class="tag mint">{{ Category.strCategory }}</span></div>
                         <h2>{{ recipe.strMeal }}</h2>
                         <p>{{ recipe.Description }}</p>
                         <div class="inline-actions"><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_detail' %}">View</a><a class="button" href="{% url 'Recipe_Meal_Planner:recipe_form' %}">Edit</a></div>

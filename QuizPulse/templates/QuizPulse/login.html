@@ -1,0 +1,39 @@
+{% extends 'QuizPulse/base.html' %}
+
+{% block title %}Login | QuizPulse{% endblock %}
+
+{% block content %}
+<section class="auth-panel">
+    <div class="auth-copy">
+        <p class="eyebrow">Welcome back</p>
+        <h1>Login to QuizPulse</h1>
+        <p class="intro">Sign in to start a quiz session, review answers, and keep your quiz flow private.</p>
+    </div>
+
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+
+        {% if messages %}
+            <div class="message-list">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <label>
+            Username
+            <input type="text" name="username" autocomplete="username" required>
+        </label>
+
+        <label>
+            Password
+            <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+
+        <button type="submit" class="primary-button">Login</button>
+        <p class="auth-switch">New to QuizPulse? <a href="{% url 'QuizPulse:register' %}">Create an account</a></p>
+    </form>
+</section>
+{% endblock %}

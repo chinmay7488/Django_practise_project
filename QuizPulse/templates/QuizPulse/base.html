@@ -12,14 +12,28 @@
         <nav class="nav">
             <a class="brand" href="{% url 'QuizPulse:home' %}">QuizPulse</a>
             <div class="nav-links">
-                <a href="{% url 'QuizPulse:home' %}">Setup</a>
-                <a href="{% url 'QuizPulse:review' %}">Review</a>
-                <a href="{% url 'QuizPulse:restart' %}">Restart</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'QuizPulse:home' %}">Setup</a>
+                    <a href="{% url 'QuizPulse:review' %}">Review</a>
+                    <a href="{% url 'QuizPulse:restart' %}">Restart</a>
+                    <a href="{% url 'QuizPulse:logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'QuizPulse:login' %}">Login</a>
+                    <a href="{% url 'QuizPulse:register' %}">Register</a>
+                {% endif %}
             </div>
         </nav>
     </header>
 
     <main class="page-shell">
+        {% if messages %}
+            <div class="message-list global-messages">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         {% block content %}{% endblock %}
     </main>
 </body>
