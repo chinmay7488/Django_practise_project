@@ -1,2 +1,5 @@
 my_env/
 Doc/
+.kiro/
+.vscode/
+__pycache__/
