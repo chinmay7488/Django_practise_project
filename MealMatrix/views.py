@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.dateparse import parse_date
 from .models import *
 import requests
 import random
+from datetime import timedelta
 
 MealDB_BASE_url = "https://www.themealdb.com/api/json/v1/1/"
 CalorieNinjas_API_KEY = 'hgjhLLbxtolxEeL2Ge1DUCTsIHYFrDQDS4qo2m92'
@@ -16,7 +22,7 @@ Ingredient_List =[]
 
 def home(request):
     if len(Category_List) == 0:
-        category_url = f"{MealDB_BASE_url}{"categories.php"}"   
+        category_url = f"{MealDB_BASE_url}categories.php"
         respone_cat = requests.get(category_url).json()['categories']
         for cat in respone_cat:
             Category_List.append(cat)
@@ -65,8 +71,104 @@ def logout_page(request):
     auth_logout(request)
     return redirect('MealMatrix:home')
 
+@login_required(login_url="MealMatrix:login")
 def Meal_Planner(request):
-    return render(request, "MealMatrix/meal_planner.html")
+    selected_date = parse_date(request.GET.get("date", "")) or timezone.localdate()
+    week_start = selected_date - timedelta(days=selected_date.weekday())
+    week_days = [
+        {
+            "name": (week_start + timedelta(days=offset)).strftime("%A"),
+            "date": week_start + timedelta(days=offset),
+        }
+        for offset in range(7)
+    ]
+    meal_types = [choice[0] for choice in MealPlanEntry.MEAL_TYPE_CHOICES]
+    entries = MealPlanEntry.objects.filter(
+        user=request.user,
+        date__range=(week_days[0]["date"], week_days[-1]["date"]),
+    )
+    planned_meals = {
+        (entry.date, entry.meal_type): entry
+        for entry in entries
+    }
+    planner_days = []
+    for day in week_days:
+        slots = []
+        for meal_type in meal_types:
+            slots.append({
+                "meal_type": meal_type,
+                "entry": planned_meals.get((day["date"], meal_type)),
+            })
+        planner_days.append({**day, "slots": slots})
+
+    context = {
+        "planner_days": planner_days,
+        "meal_types": meal_types,
+        "week_start": week_days[0]["date"],
+        "week_end": week_days[-1]["date"],
+        "previous_week": week_start - timedelta(days=7),
+        "next_week": week_start + timedelta(days=7),
+    }
+    return render(request, "MealMatrix/meal_planner.html", context)
+
+
+@login_required(login_url="MealMatrix:login")
+def Add_meal_to_plan(request):
+    plan_date = parse_date(request.GET.get("date", "") or request.POST.get("date", ""))
+    meal_type = request.GET.get("meal_type") or request.POST.get("meal_type")
+    valid_meal_types = [choice[0] for choice in MealPlanEntry.MEAL_TYPE_CHOICES]
+
+    if plan_date is None or meal_type not in valid_meal_types:
+        messages.error(request, "Choose a valid date and meal slot before adding a recipe.")
+        return redirect("MealMatrix:meal_planner")
+
+    if request.method == "POST":
+        mealdb_id = request.POST.get("mealdb_id")
+        meal_name = request.POST.get("meal_name")
+        meal_thumb = request.POST.get("meal_thumb", "")
+
+        if not mealdb_id or not meal_name:
+            messages.error(request, "Select a recipe before adding it to your plan.")
+            return redirect(
+                f"{request.path}?date={plan_date.isoformat()}&meal_type={meal_type}"
+            )
+
+        MealPlanEntry.objects.update_or_create(
+            user=request.user,
+            date=plan_date,
+            meal_type=meal_type,
+            defaults={
+                "mealdb_id": mealdb_id,
+                "meal_name": meal_name,
+                "meal_thumb": meal_thumb,
+            },
+        )
+        messages.success(request, f"{meal_name} added to {meal_type} on {plan_date}.")
+        return redirect(f"{reverse('MealMatrix:meal_planner')}?date={plan_date.isoformat()}")
+
+    query = request.GET.get("q", "").strip()
+    recipes = []
+    api_error = ""
+    if query:
+        try:
+            response = requests.get(
+                f"{MealDB_BASE_url}search.php",
+                params={"s": query},
+                timeout=8,
+            )
+            response.raise_for_status()
+            recipes = response.json().get("meals") or []
+        except requests.RequestException:
+            api_error = "MealDB search is unavailable right now. Please try again."
+
+    context = {
+        "plan_date": plan_date,
+        "meal_type": meal_type,
+        "query": query,
+        "recipes": recipes,
+        "api_error": api_error,
+    }
+    return render(request, "MealMatrix/meal_plan_add.html", context)
 
 def Nutrition(request):
     return render(request, "MealMatrix/nutrition.html")

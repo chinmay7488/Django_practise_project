@@ -1,0 +1,174 @@
+:root {
+    --bg: #0a0a0f;
+    --surface: #14141f;
+    --border: #2a2a3a;
+    --text: #eeeef5;
+    --muted: #7a7a8e;
+    --accent: #7c5cfc;
+    --accent-glow: rgba(124, 92, 252, 0.25);
+    --pulse-glow: rgba(124, 92, 252, 0.4);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+.app-shell {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+.counter-page {
+    padding: 32px 20px;
+    width: 100%;
+}
+
+.counter-container {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+}
+
+.heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--muted);
+}
+
+.count-display {
+    font-size: 6rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    transition: transform 0.15s, text-shadow 0.3s;
+}
+
+.count-display.pulse {
+    transform: scale(1.08);
+    text-shadow: 0 0 30px var(--pulse-glow);
+}
+
+.tap-button {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s, background 0.2s;
+    box-shadow: 0 0 40px var(--accent-glow);
+}
+
+.tap-button:hover {
+    background: rgba(124, 92, 252, 0.1);
+    box-shadow: 0 0 60px var(--accent-glow);
+}
+
+.tap-button:active {
+    transform: scale(0.93);
+    background: rgba(124, 92, 252, 0.2);
+}
+
+.mode-toggle {
+    display: flex;
+    justify-content: center;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.toggle-label input {
+    display: none;
+}
+
+.toggle-track {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    background: var(--border);
+    transition: background 0.2s;
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.toggle-label input:checked ~ .toggle-track {
+    background: var(--accent);
+}
+
+.toggle-label input:checked ~ .toggle-track .toggle-thumb {
+    transform: translateX(20px);
+    background: #fff;
+}
+
+.status-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--muted);
+}
+
+.conn-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f85149;
+    transition: background 0.3s;
+}
+
+.conn-dot.connected {
+    background: #3fb950;
+}
+
+.activity {
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .count-display {
+        font-size: 4rem;
+    }
+
+    .tap-button {
+        width: 130px;
+        height: 130px;
+        font-size: 1.2rem;
+    }
+}

@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -42,7 +44,10 @@ INSTALLED_APPS = [
     'Text_Analyzer',
     "Recipe_Meal_Planner",
     "MealMatrix",
-    "QuizPulse"
+    "QuizPulse",
+    "Price_Ticker",
+    'Click_Counter',
+    'Chat_Room'
 ]
 
 MIDDLEWARE = [
@@ -72,7 +77,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "DjangoPractisePro.wsgi.application"
+#WSGI_APPLICATION = "DjangoPractisePro.wsgi.application"
+ASGI_APPLICATION = "DjangoPractisePro.asgi.application"
 
 
 # Database
@@ -83,6 +89,13 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
+}
+
+# In-memory channel layer (Perfect for practicing locally without installing Redis)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
 }
 
 

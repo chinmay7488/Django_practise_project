@@ -1,0 +1,38 @@
+    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const socket = new WebSocket(ws_scheme + "://" + window.location.host + "/ws/counter/");
+
+    const countEl = document.getElementById("count-display");
+    const tapBtn = document.getElementById("tap-btn");
+    const activityEl = document.getElementById("activity");
+    const connDot = document.getElementById("conn-dot");
+    const persistToggle = document.getElementById("persist-toggle");
+
+    socket.onopen = function() {
+        connDot.classList.add("connected");
+    };
+
+    socket.onclose = function() {
+        connDot.classList.remove("connected");
+    };
+
+    socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+        if (data.count !== undefined) {
+            countEl.textContent = data.count;
+            countEl.classList.add("pulse");
+            setTimeout(function() {
+                countEl.classList.remove("pulse");
+            }, 300);
+        }
+
+        if (data.connections !== undefined) {
+            const n = data.connections;
+            activityEl.textContent = n + (n === 1 ? " person is" : " people are") + " tapping live right now";
+        }
+    };
+
+    tapBtn.addEventListener("click", function() {
+        const persistent = persistToggle.checked;
+        socket.send(JSON.stringify({action: "increment", persistent: persistent}));
+    });

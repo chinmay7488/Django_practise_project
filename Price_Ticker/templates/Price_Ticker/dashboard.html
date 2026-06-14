@@ -1,0 +1,105 @@
+{% extends "Price_Ticker/base.html" %}
+{% block title %}Live Price Ticker{% endblock %}
+{% block content %}
+<header class="topbar">
+    <h1 class="logo">Price Ticker</h1>
+    <span class="status" id="conn-status">Disconnected</span>
+</header>
+<main class="dashboard">
+    <div class="ticker-grid">
+        <article class="ticker-card" data-symbol="BTC">
+            <div class="ticker-icon">₿</div>
+            <div class="ticker-info">
+                <h2>Bitcoin</h2>
+                <span class="symbol">BTC</span>
+            </div>
+            <div class="ticker-price" id="price-BTC">--</div>
+            <div class="ticker-change" id="change-BTC"></div>
+        </article>
+        <article class="ticker-card" data-symbol="ETH">
+            <div class="ticker-icon">Ξ</div>
+            <div class="ticker-info">
+                <h2>Ethereum</h2>
+                <span class="symbol">ETH</span>
+            </div>
+            <div class="ticker-price" id="price-ETH">--</div>
+            <div class="ticker-change" id="change-ETH"></div>
+        </article>
+        <article class="ticker-card" data-symbol="AAPL">
+            <div class="ticker-icon"></div>
+            <div class="ticker-info">
+                <h2>Apple</h2>
+                <span class="symbol">AAPL</span>
+            </div>
+            <div class="ticker-price" id="price-AAPL">--</div>
+            <div class="ticker-change" id="change-AAPL"></div>
+        </article>
+        <article class="ticker-card" data-symbol="TSLA">
+            <div class="ticker-icon">⚡</div>
+            <div class="ticker-info">
+                <h2>Tesla</h2>
+                <span class="symbol">TSLA</span>
+            </div>
+            <div class="ticker-price" id="price-TSLA">--</div>
+            <div class="ticker-change" id="change-TSLA"></div>
+        </article>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    const prices = {};
+    // #const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const socket = new WebSocket("ws://" + window.location.host + "/ws/dashboard/");
+
+    const statusEl = document.getElementById("conn-status");
+
+    socket.onopen = function() {
+        statusEl.textContent = "Live";
+        statusEl.classList.add("connected");
+    };
+
+    socket.onclose = function() {
+        statusEl.textContent = "Disconnected";
+        statusEl.classList.remove("connected");
+    };
+
+    socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const tickers = data.prices || data;
+        
+
+        for (const [symbol, newPrice] of Object.entries(tickers)) {
+            const priceEl = document.getElementById("price-" + symbol);
+            const changeEl = document.getElementById("change-" + symbol);
+            const card = document.querySelector('[data-symbol="' + symbol + '"]');
+                  
+            if (!priceEl || !card) continue;
+
+            const oldPrice = prices[symbol] || newPrice;
+            const diff = newPrice - oldPrice;
+            const pct = oldPrice !== 0 ? ((diff / oldPrice) * 100).toFixed(2) : "0.00";
+
+            priceEl.textContent = "$" + newPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            if (diff > 0) {
+                changeEl.textContent = "▲ +" + pct + "%";
+                changeEl.className = "ticker-change up";
+                card.classList.remove("flash-down");
+                card.classList.add("flash-up");
+            } else if (diff < 0) {
+                changeEl.textContent = "▼ " + pct + "%";
+                changeEl.className = "ticker-change down";
+                card.classList.remove("flash-up");
+                card.classList.add("flash-down");
+            }
+
+            prices[symbol] = newPrice;
+
+            setTimeout(function() {
+                card.classList.remove("flash-up", "flash-down");
+            }, 600);
+        }
+    };
+</script>
+{% endblock %}

@@ -10,6 +10,7 @@ urlpatterns = [
     path("login/", views.Login_page, name="login"),
     path("logout/", views.logout_page, name="logout"),
     path("meal-planner/", views.Meal_Planner, name="meal_planner"),
+    path("meal-planner/add/", views.Add_meal_to_plan, name="meal_plan_add"),
     path("nutrition/", views.Nutrition, name="nutrition"),
     path("pantry/", views.Pantry, name="pantry"),
     path("categories/", views.Categories_page, name="categories"),

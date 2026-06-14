@@ -1,0 +1,61 @@
+{% extends "Click_Counter/base.html" %}
+{% block title %}Live Click Counter{% endblock %}
+{% block content %}
+<main class="counter-page">
+    <div class="counter-container">
+        <h1 class="heading">Click Counter</h1>
+        <div class="count-display" id="count-display">0</div>
+        <button class="tap-button" id="tap-btn">TAP</button>
+        <div class="mode-toggle">
+            <label class="toggle-label">
+                <input type="checkbox" id="persist-toggle">
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span class="toggle-text">Persistent Mode</span>
+            </label>
+        </div>
+        <div class="status-bar">
+            <span class="conn-dot" id="conn-dot"></span>
+            <span class="activity" id="activity">0 people are tapping live right now</span>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const socket = new WebSocket(ws_scheme + "://" + window.location.host + "/ws/counter/");
+     
+    const tapButton = document.getElementById('tap-btn')
+    const counter = document.getElementById('count-display')
+    const active = document.getElementById('activity')
+
+    tapButton.addEventListener('click', function() {
+            // Check if the socket is open before sending data
+            if (socket.readyState === WebSocket.OPEN) {
+                
+                // Create a data object to send
+                const payload = {
+                    "action": "click_registered",
+                };
+
+                // CRUCIAL: WebSockets only send text strings. 
+                // We must use JSON.stringify() to convert our object into a string.
+                socket.send(JSON.stringify(payload));
+                
+                console.log("Data sent to server:", payload);
+
+            } else {
+                console.error("WebSocket is not open. Cannot send data.");
+            }
+        });
+
+        socket.onmessage = function(event) {
+            const serverState = JSON.parse(event.data);
+            console.log("Data recived from server:", serverState)
+            // Update DOM text dynamically without refreshing the window layout
+            counter.innerText = serverState.current_count;
+            active.innerText = serverState.users_online;
+        };
+        socket.onclose = function() { console.log("Connection with counter server severed."); };
+</script>
+{% endblock %}

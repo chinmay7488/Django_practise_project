@@ -1,30 +1,64 @@
-{% extends "MealMatrix/base.html" %} 
+{% extends "MealMatrix/base.html" %}
 {% block Title %}Meal Planner{% endblock %}
 {% block content %}
 
 <body>
-    <header class="topbar">
-        <a class="brand" href="{% url 'MealMatrix:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
-        <nav class="nav"><a href="{% url 'MealMatrix:home' %}">Dashboard</a><a href="{% url 'MealMatrix:recipes' %}">Recipes</a><a href="{% url 'MealMatrix:categories' %}">Categories</a><a class="active" href="{% url 'MealMatrix:meal_planner' %}">Planner</a><a href="{% url 'MealMatrix:shopping_list' %}">Shopping List</a></nav>
-    </header>
-    <main class="page">
-        <section class="section">
-            <p class="eyebrow">7-day calendar</p>
-            <h1>Meal Planner</h1>
-            <div class="toolbar mt-md">
-                <select><option>Herbed Lemon Pasta</option><option>Berry Protein Oats</option><option>Paneer Grain Bowl</option></select>
-                <a class="button primary" href="{% url 'MealMatrix:smart_generator' %}">Automate My Week</a>
-            </div>
-        </section>
-        <section class="planner-grid">
-            <article class="day-card"><h3>Monday</h3><select><option>Berry Protein Oats</option></select><div class="meal-slot"><span class="small">Dinner</span><div class="drop-zone">Herbed Lemon Pasta</div></div></article>
-            <article class="day-card"><h3>Tuesday</h3><select><option>Paneer Grain Bowl</option></select><div class="meal-slot"><span class="small">Dinner</span><div class="drop-zone">Veggie Couscous</div></div></article>
-            <article class="day-card"><h3>Wednesday</h3><select><option>Lentil Soup</option></select><div class="meal-slot"><span class="small">Dinner</span><div class="drop-zone">Lentil Soup</div></div></article>
-            <article class="day-card"><h3>Thursday</h3><select><option>Tofu Stir Fry</option></select><div class="meal-slot"><span class="small">Dinner</span><div class="drop-zone">Tofu Stir Fry</div></div></article>
-            <article class="day-card"><h3>Friday</h3><select><option>Millet Bowl</option></select><div class="meal-slot"><span class="small">Dinner</span><div class="drop-zone">Millet Bowl</div></div></article>
-            <article class="day-card"><h3>Saturday</h3><select><option>Tomato Risotto</option></select><div class="meal-slot"><span class="small">Dinner</span><div class="drop-zone">Tomato Risotto</div></div></article>
-            <article class="day-card"><h3>Sunday</h3><select><option>Sweet Potato Tacos</option></select><div class="meal-slot"><span class="small">Dinner</span><div class="drop-zone">Sweet Potato Tacos</div></div></article>
-        </section>
-    </main>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="{% url 'MealMatrix:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+            <nav class="nav"><a href="{% url 'MealMatrix:home' %}">Dashboard</a><a href="{% url 'MealMatrix:recipes' %}">Recipes</a><a href="{% url 'MealMatrix:categories' %}">Categories</a><a class="active" href="{% url 'MealMatrix:meal_planner' %}">Planner</a><a href="{% url 'MealMatrix:shopping_list' %}">Shopping List</a></nav>
+        </header>
+        <main class="page planner-page">
+            <section class="section planner-hero">
+                <p class="eyebrow">7-day calendar</p>
+                <h1>Meal Planner</h1>
+                <div class="toolbar planner-toolbar mt-md">
+                    <a class="button" href="{% url 'MealMatrix:meal_planner' %}?date={{ previous_week|date:'Y-m-d' }}">Previous Week</a>
+                    <span class="week-range">{{ week_start|date:"M j, Y" }} - {{ week_end|date:"M j, Y" }}</span>
+                    <a class="button" href="{% url 'MealMatrix:meal_planner' %}?date={{ next_week|date:'Y-m-d' }}">Next Week</a>
+                    <a class="button primary" href="{% url 'MealMatrix:smart_generator' %}">Automate My Week</a>
+                </div>
+                {% if messages %}
+                    <div class="message-stack mt-md">
+                        {% for message in messages %}
+                            <div class="notice {{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </section>
+
+            <section class="planner-grid planner-week" aria-label="Weekly meal planner">
+                {% for day in planner_days %}
+                    <article class="day-card">
+                        <div class="day-heading">
+                            <h3>{{ day.name }}</h3>
+                            <span class="small">{{ day.date|date:"M j" }}</span>
+                        </div>
+                        {% for slot in day.slots %}
+                            <div class="meal-slot">
+                                <div class="slot-title">
+                                    <span class="small">{{ slot.meal_type }}</span>
+                                    <a class="icon-button" title="Add {{ slot.meal_type }}" aria-label="Add {{ slot.meal_type }} on {{ day.name }}" href="{% url 'MealMatrix:meal_plan_add' %}?date={{ day.date|date:'Y-m-d' }}&meal_type={{ slot.meal_type }}">+</a>
+                                </div>
+                                {% if slot.entry %}
+                                    <div class="drop-zone planned-meal">
+                                        {% if slot.entry.meal_thumb %}
+                                            <img src="{{ slot.entry.meal_thumb }}" alt="{{ slot.entry.meal_name }}">
+                                        {% endif %}
+                                        <strong>{{ slot.entry.meal_name }}</strong>
+                                        <span class="small">MealDB #{{ slot.entry.mealdb_id }}</span>
+                                    </div>
+                                {% else %}
+                                    <a class="drop-zone empty-slot" href="{% url 'MealMatrix:meal_plan_add' %}?date={{ day.date|date:'Y-m-d' }}&meal_type={{ slot.meal_type }}">
+                                        <span>+</span>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </article>
+                {% endfor %}
+            </section>
+        </main>
+    </div>
 </body>
 {% endblock %}

@@ -29,6 +29,9 @@ urlpatterns = [
     path('Recipe_Meal_Planner/', include('Recipe_Meal_Planner.urls')),
     path('MealMatrix/', include('MealMatrix.urls')),
     path('QuizPulse/', include('QuizPulse.urls')),
+    path('PriceTicker/', include('Price_Ticker.urls')),
+    path('ClickCounter/', include('Click_Counter.urls')),
+    path('ChatRoom/', include('Chat_Room.urls')),
 ]
 
 if settings.DEBUG:

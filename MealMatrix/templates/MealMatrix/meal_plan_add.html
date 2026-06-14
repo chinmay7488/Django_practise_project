@@ -1,0 +1,74 @@
+{% extends "MealMatrix/base.html" %}
+{% block Title %}Add Meal to Plan{% endblock %}
+{% block content %}
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'MealMatrix:home' %}"><span class="brand-mark">RM</span><span>Recipe Meal Planner</span></a>
+        <nav class="nav"><a href="{% url 'MealMatrix:home' %}">Dashboard</a><a href="{% url 'MealMatrix:recipes' %}">Recipes</a><a href="{% url 'MealMatrix:categories' %}">Categories</a><a class="active" href="{% url 'MealMatrix:meal_planner' %}">Planner</a><a href="{% url 'MealMatrix:shopping_list' %}">Shopping List</a></nav>
+    </header>
+    <main class="page recipes-page">
+        <section class="section">
+            <p class="eyebrow">{{ meal_type }} on {{ plan_date|date:"l, M j, Y" }}</p>
+            <h1>Add a Meal</h1>
+            <form class="toolbar mt-md" method="get" style="flex-wrap: nowrap; align-items: flex-end;">
+                <input type="hidden" name="date" value="{{ plan_date|date:'Y-m-d' }}">
+                <input type="hidden" name="meal_type" value="{{ meal_type }}">
+                <label class="search-field" style="flex: 1 1 auto; min-width: 0;">
+                    <span class="field-label">Search MealDB</span>
+                    <input name="q" value="{{ query }}" placeholder="Chicken" autofocus>
+                </label>
+                <button class="primary" type="submit" style="flex-shrink: 0;">Search</button>
+                <a class="button" href="{% url 'MealMatrix:meal_planner' %}?date={{ plan_date|date:'Y-m-d' }}" style="flex-shrink: 0; white-space: nowrap;">Back to Planner</a>
+            </form>
+            {% if api_error %}
+                <div class="notice error mt-md">{{ api_error }}</div>
+            {% endif %}
+            {% if messages %}
+                <div class="message-stack mt-md">
+                    {% for message in messages %}
+                        <div class="notice {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+
+        {% if query and not recipes and not api_error %}
+            <section class="panel">
+                <p>No MealDB recipes found for "{{ query }}".</p>
+            </section>
+        {% endif %}
+
+        {% if recipes %}
+            <section class="recipe-grid">
+                {% for recipe in recipes %}
+                    <article class="recipe-card">
+                        {% if recipe.strMealThumb %}
+                            <img src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }}">
+                        {% else %}
+                            <div class="recipe-photo"></div>
+                        {% endif %}
+                        <div>
+                            <h2>{{ recipe.strMeal }}</h2>
+                            <p class="small">MealDB #{{ recipe.idMeal }}</p>
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="date" value="{{ plan_date|date:'Y-m-d' }}">
+                            <input type="hidden" name="meal_type" value="{{ meal_type }}">
+                            <input type="hidden" name="mealdb_id" value="{{ recipe.idMeal }}">
+                            <input type="hidden" name="meal_name" value="{{ recipe.strMeal }}">
+                            <input type="hidden" name="meal_thumb" value="{{ recipe.strMealThumb }}">
+                            <button class="primary" type="submit">Add to Plan</button>
+                        </form>
+                    </article>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </main>
+</body>
+{% endblock %}
+
+
+
+

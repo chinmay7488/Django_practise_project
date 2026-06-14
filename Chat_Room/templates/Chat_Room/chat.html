@@ -1,0 +1,157 @@
+{% extends "Chat_Room/base.html" %}
+{% block title %}Chat Lounge{% endblock %}
+{% block content %}
+<div class="chat-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Online</h2>
+            <span class="badge" id="online-count">0</span>
+        </div>
+        <ul class="user-list" id="user-list"></ul>
+    </aside>
+    <main class="chat-main">
+        <header class="chat-header">
+            <h1>Chat Lounge</h1>
+            <span class="conn-badge" id="conn-badge">Connecting...</span>
+        </header>
+        <div class="messages-container" id="messages-container"></div>
+        <div class="typing-indicator" id="typing-indicator"></div>
+        <form class="message-form" id="message-form">
+            <input type="text" id="username-input" placeholder="Your name" maxlength="20" required>
+            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" required>
+            <button type="submit">Send</button>
+        </form>
+    </main>
+    <div class="unread-badge" id="unread-badge" style="display:none;">0</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    const messagesContainer = document.getElementById("messages-container");
+    const messageForm = document.getElementById("message-form");
+    const messageInput = document.getElementById("message-input");
+    const usernameInput = document.getElementById("username-input");
+    const typingIndicator = document.getElementById("typing-indicator");
+    const userList = document.getElementById("user-list");
+    const onlineCount = document.getElementById("online-count");
+    const connBadge = document.getElementById("conn-badge");
+    const unreadBadge = document.getElementById("unread-badge");
+
+    let unreadCount = 0;
+    let isTabFocused = true;
+    let typingTimeout = null;
+    let lastTypingSent = 0;
+
+    const socket = new WebSocket("ws://" + window.location.host + "/ws/chatroom/");
+
+    socket.onopen = function() {
+        connBadge.textContent = "Live";
+        connBadge.classList.add("connected");
+    };
+
+    socket.onclose = function() {
+        connBadge.textContent = "Disconnected";
+        connBadge.classList.remove("connected");
+    };
+
+    socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+        if (data.type === "chat_message") {
+            appendMessage(data.username, data.message, data.timestamp);
+            if (!isTabFocused) {
+                unreadCount++;
+                unreadBadge.textContent = unreadCount;
+                unreadBadge.style.display = "flex";
+            }
+        }
+
+        if (data.type === "user_list") {
+            renderUserList(data.users);
+        }
+
+        if (data.type === "typing") {
+            showTyping(data.username, data.status);
+        }
+    };
+
+    messageForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const username = usernameInput.value.trim();
+        const message = messageInput.value.trim();
+        if (!username || !message) return;
+
+        socket.send(JSON.stringify({
+            event: "message",
+            username: username,
+            message: message
+        }));
+        messageInput.value = "";
+    });
+
+    messageInput.addEventListener("keypress", function() {
+        const now = Date.now();
+        if (now - lastTypingSent < 1000) return;
+        lastTypingSent = now;
+        const username = usernameInput.value.trim();
+        if (!username) return;
+        socket.send(JSON.stringify({
+            event: "typing",
+            username: username,
+            status: true
+        }));
+    });
+
+    function appendMessage(username, message, timestamp) {
+        const div = document.createElement("div");
+        div.className = "message";
+        const time = timestamp ? new Date(timestamp).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}) : "";
+        div.innerHTML = '<span class="msg-user">' + username + '</span><span class="msg-time">' + time + '</span><p class="msg-text">' + message + '</p>';
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function renderUserList(users) {
+        onlineCount.textContent = users.length;
+        userList.innerHTML = "";
+        users.forEach(function(user) {
+            const li = document.createElement("li");
+            li.innerHTML = '<span class="presence-dot"></span>' + user;
+            userList.appendChild(li);
+        });
+    }
+
+    function showTyping(username, status) {
+        if (status) {
+            typingIndicator.textContent = username + " is typing...";
+            typingIndicator.classList.add("visible");
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(function() {
+                typingIndicator.classList.remove("visible");
+            }, 2000);
+        } else {
+            typingIndicator.classList.remove("visible");
+        }
+    }
+
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+            isTabFocused = false;
+        } else {
+            isTabFocused = true;
+            unreadCount = 0;
+            unreadBadge.style.display = "none";
+        }
+    });
+
+    usernameInput.addEventListener("change", function() {
+        const username = usernameInput.value.trim();
+        if (username) {
+            socket.send(JSON.stringify({
+                event: "join",
+                username: username
+            }));
+        }
+    });
+</script>
+{% endblock %}
